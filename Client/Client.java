@@ -1,4 +1,5 @@
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -7,6 +8,28 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Component;
 import java.awt.Font;
 import java.io.File;
+
+public class Label {
+    public Label (String font, int class, int size) {
+        title.setFont(new Font("Sans", Font.BOLD, 24));
+        title.setBorder(new EmptyBorder(21, 0, 10, 0));
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+    }
+}
+
+    public class Button {
+        private JButton button;
+
+        public Button(String label) {
+            button = new JButton(label);
+            button.setPreferedSize(new Dimension(150, 48));
+            button.setFont(new Font("Sans", Font.PLAIN, 24));
+        }
+
+        public JButton get() {
+            return button;
+        }
+    }
 
 public class Client {
     public static void main(String[] args) {
@@ -22,7 +45,7 @@ public class Client {
         // Title placement
         JLabel title = new JLabel("White Rabbit");
         title.setFont(new Font("Sans", Font.BOLD, 24));
-        title.setBorder(new EmptyBorder(20, 0, 10, 0));
+        title.setBorder(new EmptyBorder(21, 0, 10, 0));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // File description placement
@@ -33,7 +56,19 @@ public class Client {
 
         // Button placement
         JPanel button = new JPanel();
-        button.setBorder(new EmptyBorder(borderInsets));
+        button.setBorder(new EmptyBorder(21, 0, 10, 0));
+
+        JButton choose = new Button("Choose file");
+        send.setPreferredSize(new Dimension(150, 48));
+        send.setFont(new Font("Sans", Font.PLAIN, 24));
+
+        JButton send = new Button("Send file");
+        send.setPreferredSize(new Dimension(150, 48));
+        send.setFont(new Font("Sans", Font.PLAIN, 24));
+
+        JButton send = new Button("Cancel");
+        send.setPreferredSize(new Dimension(150, 48));
+        send.setFont(new Font("Sans", Font.PLAIN, 24));
 
     }
 }
