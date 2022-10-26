@@ -97,6 +97,7 @@ public class Peer implements Runnable{
 	//Sends files to the client Peer
 	public void sendFile() throws IOException {
 		int request = in.readInt();
+		System.out.println(request);
 		FileSender fileSender = new FileSender(clientSocket);
 		File file = new File(myDirectory[request]);
 		fileSender.sendFile(file);
@@ -173,15 +174,18 @@ public class Peer implements Runnable{
 			if(args[0].equals("-s")) {
 				peer.createServer();
 				peer.sendListDirectory();
-				File file = new File("teste.txt");
-				FileSender fileSender = new FileSender(peer.clientSocket);
-				fileSender.sendFile(file);
+				peer.receiveRequest();
+				//File file = new File("teste.txt");
+				//FileSender fileSender = new FileSender(peer.clientSocket);
+				//fileSender.sendFile(file);
 			}
 			else if(args[0].equals("-c")) {
 				peer.connect();
-				peer.sendRequest();
+				//peer.sendRequest();
 				System.out.println("HELLO");
 				peer.receiveListDirectory();
+				peer.sendRequest();
+				
 				FileReceiver fileReceiver = new FileReceiver(peer.clientSocket);
 				fileReceiver.receiveFile();
 			}

@@ -45,7 +45,7 @@ public class FileSender{
 		out.write(fileContents);
 		
 		fileIn.close();
-		
+		out.flush();
 	}
 	
 	//Closes the OutputStream created with the FileSender
