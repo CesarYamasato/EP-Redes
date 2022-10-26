@@ -1,9 +1,3 @@
-import javax.swing.BoxLayout;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
-import javax.swing.border.EmptyBorder;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +6,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import javax.swing.BoxLayout;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
 
 public class Client {
     public static void main(String[] args) {
@@ -25,7 +25,7 @@ public class Client {
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Title placement
-        Label title = new Label("White Rabbit", "Sans", FONT.BOLD, 24);
+        Label title = new Label("White Rabbit", "Sans", Font.BOLD, 24);
         Label text = new Label("Choose a file to send", "Sans", Font.PLAIN, 12);
 
         // Button placement
@@ -36,7 +36,7 @@ public class Client {
         Button send = new Button("Send file");
         Button cancel = new Button("Cancel");
 
-        buttons.add(choose);
+        buttons.add(choose.get());
 
         choose.get().addActionListener(new ActionListener() {
             @Override
@@ -46,7 +46,10 @@ public class Client {
 
                 if (menu.showOpenDialog(window) == JFileChooser.APPROVE_OPTION) {
                     f[0] = menu.getSelectedFile();
-                    text.get().setText(d[0].getName());
+                    text.get().setText(f[0].getName());
+                    buttons.removeAll();
+                    buttons.add(send.get());
+                    buttons.add(cancel.get());
                 }
             }
         });
@@ -82,6 +85,17 @@ public class Client {
                     }
 
                 }
+            }
+        });
+
+        cancel.get().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                text.get().setText("Choose a file to send");
+                buttons.removeAll();
+                buttons.revalidate();
+                buttons.repaint();
+                buttons.add(choose.get());
             }
         });
 
