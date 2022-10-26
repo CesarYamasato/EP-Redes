@@ -4,14 +4,14 @@ import java.util.Scanner;
 
 import FileManager.*;
 
-public class Peer {
+public class Peer implements Runnable{
 	private Socket clientSocket;
 	private ServerSocket serverSocket;
 	private DataOutputStream out;
 	private DataInputStream in;
 	private String[] otherDirectory;
 	private String[] myDirectory;
-	private int count;
+	private int count; //Number of that have been selected but not downloaded
 	
 	public Peer(){
 		try {
@@ -77,7 +77,6 @@ public class Peer {
 			directory[i] = new String(in.readNBytes(size));
 			System.out.println(i + ":" + directory[i]);
 		}
-		count = 0;
 		this.otherDirectory = directory;
 	}
 	
@@ -91,15 +90,25 @@ public class Peer {
 			}
 		}
 		else{
-			sendRequest(1);
+			out.writeInt(1);;
 		}
 	}
 	
+	//Sends files to the client Peer
+	public void sendFile() throws IOException {
+		int request = in.readInt();
+		FileSender fileSender = new FileSender(clientSocket);
+		File file = new File(myDirectory[request]);
+		fileSender.sendFile(file);
+	}
+	
+	//Selects a file to be downloaded from the server Peer
 	public void selectFile() throws IOException {
 		printDirectory();
 		Scanner systemIn = new Scanner(System.in);
 		int requestFile = systemIn.nextInt();
 		out.writeInt(requestFile);
+		count++;
 	}
 	
 	//Sends a request to the other peer
@@ -107,38 +116,47 @@ public class Peer {
 		Scanner systemIn = new Scanner(System.in);
 		int request = systemIn.nextInt();
 		out.writeInt(request);
-		
+		int answer = in.readInt();
 		//Requests: 
-		
-		switch (request) {
-		case 1:
-			receiveListDirectory();
-			break;
-		case 2:
-			selectFile();
-			break;
-		}
-	}
-	
-	private void sendRequest(int request) throws IOException {
-		out.writeInt(request);
-		
-		//Requests: 
-		
-		switch (request) {
-		case 1:
-			receiveListDirectory();
-			break;
-		case 2:
-			
+		if(answer != 0) {
+			switch (request) {
+			case 1:
+				receiveListDirectory();
+				break;
+			case 2:
+				selectFile();
+				break;
+			case 3:
+				
+			}
 		}
 	}
 	
 	//Processes client requests for files
-	public void receiveRequest() {
-		
-		
+	public void receiveRequest() throws IOException {
+		int request = in.readInt();
+		out.writeInt(9999);
+		switch (request) {
+		case 1:
+			sendListDirectory();
+			break;
+		case 2:
+			sendFile();
+			break;
+		case 3:
+			
+		}
 	}
+	
+	public void run() {
+		try {
+			receiveRequest();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	//Closes the connection with the other peer
 	public void close() {
 		try {
