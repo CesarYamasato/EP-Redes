@@ -1,45 +1,17 @@
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataOutputStream;
 import java.io.File;
-
-public class Label {
-    private JLabel label;
-
-    public Label(String text, String font, int type, int size) {
-        label = new JLabel(text);
-        label.setFont(new Font(font, type, size));
-        label.setBorder(new EmptyBorder(size / 5 * 4, 0, size / 2, 0));
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-    }
-
-    public JLabel get() {
-        return label;
-    }
-}
-
-public class Button {
-    private JButton button;
-
-    public Button(String label) {
-        button = new JButton(label);
-        button.setPreferedSize(new Dimension(150, 48));
-        button.setFont(new Font("Sans", Font.PLAIN, 24));
-    }
-
-    public JButton get() {
-        return button;
-    }
-}
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.Socket;
 
 public class Client {
     public static void main(String[] args) {
@@ -66,7 +38,7 @@ public class Client {
 
         buttons.add(choose);
 
-        choose.addActionListener(new ActionListener() {
+        choose.get().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser menu = new JFileChooser();
@@ -79,8 +51,45 @@ public class Client {
             }
         });
 
-        send.addActionListener(new ActionListener() {
+        send.get().addActionListener(new ActionListener() {
             @Override
+            public void actionPerformed(ActionEvent e) {
+                if (f[0] != null) {
+                    try {
+                        // Take file name and its length
+                        String fileName = f[0].getName();
+                        byte[] fileBytes = fileName.getBytes();
+
+                        // Take file length and its contents
+                        byte[] fileContents = new byte[(int) f[0].length()];
+
+                        FileInputStream input = new FileInputStream(f[0]);
+                        input.read(fileContents);
+
+                        // Create socket and data output stream
+                        Socket s = new Socket("localhost", 25565);
+                        DataOutputStream output = new DataOutputStream(s.getOutputStream());
+
+                        // Send file name and its length
+                        output.writeInt(fileBytes.length);
+                        output.write(fileBytes);
+
+                        // Send file length and its contents
+                        output.writeInt(fileContents.length);
+                        output.write(fileContents);
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
+
+                }
+            }
         });
+
+        // Add elements to the window's frame
+        window.add(title.get());
+        window.add(text.get());
+        window.add(buttons);
+        window.setVisible(true);
+
     }
 }
