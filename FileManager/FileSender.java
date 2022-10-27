@@ -32,7 +32,11 @@ public class FileSender{
 	
 	//Sends a file to the socket specified upen creation of the FileSender
 	public void sendFile(File file) throws IOException {
-		FileInputStream fileIn = new FileInputStream(file.getName());
+		if(file.isDirectory()) {
+			sendFolder(file);
+			return;
+		}
+		FileInputStream fileIn = new FileInputStream(file.getAbsolutePath());
 		
 		byte[] fileName = file.getName().getBytes();
 		out.writeInt(fileName.length);
@@ -45,9 +49,18 @@ public class FileSender{
 		out.write(fileContents);
 		
 		fileIn.close();
-		out.flush();
 	}
 	
+	//Sends a folder to the socket specified upon creation of the FileSender
+	private void sendFolder(File file) throws IOException{
+		int count = 0;
+		String[] directory = file.list();
+		for (int i = 0; i < directory.length; i++) {
+			File fileToSend = new File(file.getAbsolutePath()+ "/" + directory[i]);
+			if (fileToSend.isDirectory()) sendFolder(fileToSend);
+			else sendFile(fileToSend);
+		}
+	}
 	//Closes the OutputStream created with the FileSender
 	public void close() {
 		try {

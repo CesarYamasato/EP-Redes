@@ -12,10 +12,13 @@ public class Peer implements Runnable{
 	private String[] otherDirectory;
 	private String[] myDirectory;
 	private int count; //Number of that have been selected but not downloaded
+	private String myPath; //Path to folder from which .class was executed
+	private String otherPath; //Path to folder from which .class was executed on other peer
 	
 	public Peer(){
 		try {
 			serverSocket = new ServerSocket(25565);
+			myPath = System.getProperty("user.dir");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,13 +58,15 @@ public class Peer implements Runnable{
 	
 	//Sends the List of items in the folder on which the .class file is on
 	public void sendListDirectory() throws IOException {
-		File Directory = new File(System.getProperty("user.dir"));
+		File Directory = new File(myPath);
 		String contents[] = Directory.list();
 		
 		out.writeInt(contents.length);
 		
 	      for(int i=0; i<contents.length; i++) {
 	    	  out.writeInt(contents[i].length());
+	    	  if (new File(contents[i]).isDirectory()) out.writeBoolean(true);
+	    	  else out.writeBoolean(false);
 	    	  out.writeBytes(contents[i]);
 	      }
 	      this.myDirectory = contents;
@@ -74,19 +79,34 @@ public class Peer implements Runnable{
 		String[] directory = new String[numOfFiles]; 
 		for(int i=0; i<numOfFiles; i++) {
 			int size = in.readInt();
+			boolean isFolder = in.readBoolean();
 			directory[i] = new String(in.readNBytes(size));
-			System.out.println(i + ":" + directory[i]);
+			if(isFolder) System.out.println(i + ":" + directory[i] + "  Folder");
+			else System.out.println(i + ":" + directory[i] + "  File");
 		}
 		this.otherDirectory = directory;
 	}
 	
+	//Sends path of current directory
+	public void sendPath() throws IOException {
+		int count = myPath.length();
+		byte[] pathtoSend = new byte[count];
+		out.write(pathtoSend);
+	}
+	
+	//Receives path of current directory
+		public void receivePath() throws IOException {
+			int count = in.readInt();
+			otherPath = new String (in.readNBytes(count));
+		}
 	//Prints the directory of the other Peer
 	public void printDirectory() throws IOException {
 		
 		if(otherDirectory != null) {
-			System.out.println("(outdated by" + count + "downloads) List of files and directories that can be sent:");
+			System.out.println("(outdated by " + count + " downloads) List of files and directories that can be sent:");
 			for (int i=0; i < otherDirectory.length;i++) {
-				System.out.println(i + ":" + otherDirectory[i]);
+				if(new File(otherDirectory[i]).isDirectory()) System.out.println(i + ":" + otherDirectory[i] + "  Folder");
+				else System.out.println(i + ":" + otherDirectory[i] + "  File");
 			}
 		}
 		else{
@@ -97,10 +117,37 @@ public class Peer implements Runnable{
 	//Sends files to the client Peer
 	public void sendFile() throws IOException {
 		int request = in.readInt();
-		System.out.println(request);
 		FileSender fileSender = new FileSender(clientSocket);
-		File file = new File(myDirectory[request]);
+		File file = new File(myPath + "/" +myDirectory[request]);
+		count = countFiles(file);
+		//System.out.println(count);
+		out.writeInt(count);
 		fileSender.sendFile(file);
+		//out.writeChar('f');
+	}
+	
+	private int countFiles(File file) {
+		int count = 0;
+		if(file.isDirectory()) {
+			String[] directory = file.list();
+			for (int i = 0; i < directory.length; i ++) {
+				File fileToTest = new File(file.getAbsolutePath() + "/" + directory[i]);
+				if(fileToTest.isDirectory()) count += countFiles(fileToTest);
+				else count++;
+			}
+			return count;
+		}
+		return 1;
+	}
+	
+	//Receives all files that are on the in
+	public void receiveFiles() throws IOException{
+		count = in.readInt();
+		FileReceiver fileReceiver = new FileReceiver(clientSocket);
+		for(int i = 0; i < count; i++) {
+			fileReceiver.receiveFile();
+		}
+		count = 0;
 	}
 	
 	//Selects a file to be downloaded from the server Peer
@@ -109,17 +156,44 @@ public class Peer implements Runnable{
 		Scanner systemIn = new Scanner(System.in);
 		int requestFile = systemIn.nextInt();
 		out.writeInt(requestFile);
-		count++;
+		//count++;
+	}
+	
+	//Selects a folder to navigate to on the server peer
+	public void selectFolder() throws IOException {
+		printDirectory();
+		Scanner systemIn = new Scanner(System.in);
+		int requestFolder = systemIn.nextInt();
+		out.writeInt(requestFolder);
+		
+	}
+	
+	//Navigates to a folder on the server peer
+	public void navigate() throws IOException {
+		int requestFolder = in.readInt();
+		myPath +=  "/"+ myDirectory[requestFolder];
+		System.out.println(myPath);
+		myDirectory = new File(myPath).list();
+		for(int i = 0; i < myDirectory.length; i++) {
+			System.out.println(myDirectory[i]);
+		}
 	}
 	
 	//Sends a request to the other peer
 	public void sendRequest() throws IOException {
+		System.out.println(
+				"/////////////////////////////////////////"+ System.lineSeparator() +
+				"// 1: Update directory list            //"+ System.lineSeparator() +
+				"// 2: Select a file/folder to download //"+ System.lineSeparator() +
+				"// 3: Navigate to folder               //"+ System.lineSeparator() +
+				"/////////////////////////////////////////"
+				);
 		Scanner systemIn = new Scanner(System.in);
 		int request = systemIn.nextInt();
 		out.writeInt(request);
 		int answer = in.readInt();
 		//Requests: 
-		if(answer != 0) {
+		if(answer == 9999) {
 			switch (request) {
 			case 1:
 				receiveListDirectory();
@@ -128,7 +202,8 @@ public class Peer implements Runnable{
 				selectFile();
 				break;
 			case 3:
-				
+				selectFolder();
+				break;
 			}
 		}
 	}
@@ -145,7 +220,8 @@ public class Peer implements Runnable{
 			sendFile();
 			break;
 		case 3:
-			
+			navigate();
+			break;
 		}
 	}
 	
@@ -186,8 +262,9 @@ public class Peer implements Runnable{
 				peer.receiveListDirectory();
 				peer.sendRequest();
 				
-				FileReceiver fileReceiver = new FileReceiver(peer.clientSocket);
-				fileReceiver.receiveFile();
+				peer.receiveFiles();
+				//FileReceiver fileReceiver = new FileReceiver(peer.clientSocket);
+				//fileReceiver.receiveFile();
 			}
 			peer.close();
 	}
