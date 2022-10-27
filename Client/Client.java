@@ -1,4 +1,3 @@
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.DataOutputStream;
@@ -6,36 +5,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+import Interface.*;
 
 public class Client {
     public static void main(String[] args) {
         final File[] f = new File[1];
-        JFrame window = new JFrame("White Rabbit Client");
-
-        // Define window properties
-
-        window.setSize(450, 450);
-        window.setLayout(new BoxLayout(window.getContentPane(), BoxLayout.Y_AXIS));
-        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        // Title placement
-        Label title = new Label("White Rabbit", "Sans", Font.BOLD, 24);
-        Label text = new Label("Choose a file to send", "Sans", Font.PLAIN, 12);
+        Window window = new Window("White Rabbit Client", "White Rabbit", "Choose a file to send");
 
         // Button placement
         JPanel buttons = new JPanel();
         buttons.setBorder(new EmptyBorder(21, 0, 10, 0));
-
         Button choose = new Button("Choose file");
         Button send = new Button("Send file");
         Button cancel = new Button("Cancel");
-
         buttons.add(choose.get());
 
         choose.get().addActionListener(new ActionListener() {
@@ -44,12 +29,14 @@ public class Client {
                 JFileChooser menu = new JFileChooser();
                 menu.setDialogTitle("Choose a file to send");
 
-                if (menu.showOpenDialog(window) == JFileChooser.APPROVE_OPTION) {
+                if (menu.showOpenDialog(window.get()) == JFileChooser.APPROVE_OPTION) {
                     f[0] = menu.getSelectedFile();
-                    text.get().setText(f[0].getName());
+                    window.setDescription(f[0].getName());
                     buttons.removeAll();
                     buttons.add(send.get());
                     buttons.add(cancel.get());
+                    window.get().add(buttons);
+                    window.draw(true);
                 }
             }
         });
@@ -91,7 +78,7 @@ public class Client {
         cancel.get().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                text.get().setText("Choose a file to send");
+                window.setDescription("Choose a file to send");
                 buttons.removeAll();
                 buttons.revalidate();
                 buttons.repaint();
@@ -100,10 +87,7 @@ public class Client {
         });
 
         // Add elements to the window's frame
-        window.add(title.get());
-        window.add(text.get());
-        window.add(buttons);
-        window.setVisible(true);
-
+        window.get().add(buttons);
+        window.draw(true);
     }
 }
