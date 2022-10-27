@@ -32,13 +32,11 @@ public class Client {
                 if (menu.showOpenDialog(window.get()) == JFileChooser.APPROVE_OPTION) {
                     f[0] = menu.getSelectedFile();
                     window.setDescription(f[0].getName());
-                    buttons.removeAll();
+                    window.resetPanel(buttons);
                     buttons.add(send.get());
                     buttons.add(cancel.get());
-                    window.get().add(buttons);
-                    window.draw(true);
                 }
-            }
+        }
         });
 
         send.get().addActionListener(new ActionListener() {
@@ -79,15 +77,13 @@ public class Client {
             @Override
             public void actionPerformed(ActionEvent e) {
                 window.setDescription("Choose a file to send");
-                buttons.removeAll();
-                buttons.revalidate();
-                buttons.repaint();
+                window.resetPanel(buttons);
                 buttons.add(choose.get());
             }
         });
 
         // Add elements to the window's frame
         window.get().add(buttons);
-        window.draw(true);
+        window.draw();
     }
 }

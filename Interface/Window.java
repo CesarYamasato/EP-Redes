@@ -1,9 +1,10 @@
 package Interface;
 
-import javax.swing.JFrame;
-import javax.swing.WindowConstants;
-import javax.swing.BoxLayout;
 import java.awt.Font;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 public class Window {
 
@@ -33,7 +34,13 @@ public class Window {
         return window;
     }
 
-    public void draw(boolean b) {
-        window.setVisible(b);
+    public void draw() {
+        window.setVisible(true);
+    }
+
+    public static void resetPanel(JPanel panel) {
+        panel.removeAll();
+        panel.revalidate();
+        panel.repaint();
     }
 }
