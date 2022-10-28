@@ -26,6 +26,10 @@ public class Window {
         window.add(description.get());
     }
 
+    public void add(Container container) {
+        window.add(container.get());
+    }
+
     public void setDescription(String text) {
         description.get().setText(text);
     }
@@ -36,11 +40,5 @@ public class Window {
 
     public void draw() {
         window.setVisible(true);
-    }
-
-    public static void resetPanel(JPanel panel) {
-        panel.removeAll();
-        panel.revalidate();
-        panel.repaint();
     }
 }

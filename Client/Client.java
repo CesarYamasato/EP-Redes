@@ -16,21 +16,20 @@ public class Client {
         Window window = new Window("White Rabbit Client", "White Rabbit", "Choose a file to send");
 
         // Button placement
-        JPanel buttonContainer = new JPanel();
-        buttonContainer.setBorder(new EmptyBorder(21, 0, 10, 0));
-        Button choose = new Button("Choose file");
-        Button send = new Button("Send file");
-        Button cancel = new Button("Cancel");
-        buttonContainer.add(choose.get());
+        Container buttonContainer = new Container();
+        Interface.Button choose = new Interface.Button("Choose file");
+        Interface.Button send = new Interface.Button("Send file");
+        Interface.Button cancel = new Interface.Button("Cancel");
+        buttonContainer.add(choose);
 
         choose.get().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if ((file[0] = selectFile(window)) != null) {
                     window.setDescription(file[0].getName());
-                    window.resetPanel(buttonContainer);
-                    buttonContainer.add(send.get());
-                    buttonContainer.add(cancel.get());
+                    buttonContainer.reset();
+                    buttonContainer.add(send);
+                    buttonContainer.add(cancel);
                 }
             }
         });
@@ -48,13 +47,13 @@ public class Client {
             @Override
             public void actionPerformed(ActionEvent e) {
                 window.setDescription("Choose a file to send");
-                window.resetPanel(buttonContainer);
-                buttonContainer.add(choose.get());
+                buttonContainer.reset();
+                buttonContainer.add(choose);
             }
         });
 
         // Add elements to the window's frame
-        window.get().add(buttonContainer);
+        window.add(buttonContainer);
         window.draw();
     }
 

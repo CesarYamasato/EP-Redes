@@ -53,57 +53,60 @@ public class Server {
                         }
                     }
                 }
-                
             }
         }
     }
- 
-}
 
-public static JFrame PopUp(String fileName, String fileExtension, byte[] fileData) {
-    Window popUp = new Window("White Rabbit File Downloader", "File Downloader", "Are you sure you want to download " + fileName);
+    public static JFrame PopUp(String fileName, String fileExtension, byte[] fileData) {
+        Window popUp = new Window("White Rabbit File Downloader", "File Downloader", "Are you sure you want to download " + fileName);
 
-    Label FileContent;
-    JPanel buttons = new JPanel();
-    buttons.setBorder(new EmptyBorder(21, 0, 10, 0));
-    Button yes = new Button("Yes");
-    Button no = new Button("No");
-    buttons.add(yes);
-    buttons.add(no);
+        Label FileContent;
+        JPanel buttons = new JPanel();
+        buttons.setBorder(new EmptyBorder(21, 0, 10, 0));
+        Button yes = new Button("Yes");
+        Button no = new Button("No");
+        buttons.add(yes);
+        buttons.add(no);
 
-    FileContent = (fileExtension.equalsIgnoreCase("txt")) new Label("<html>" + new String(fileData) + "</html>", "Sans", Font.PLAIN, 12) : new Label(new ImageIcon(fileData));
-
-    yes.addActionListener(new addActionListener() {
-        @Override
-        public void actionPerformed() {
-            File f = new File(fileName);
-            try {
-                FileOutputStream output = new FileOutputStream(f);
-                FileOutputStream.write(fileData);
-                FileOutputStream.close();
-            }
+        if (fileExtension.equalsIgnoreCase("txt")) {
+            FileContent = (fileExtension.equalsIgnoreCase("txt")) ? new Label("<html>" + new String(fileData) + "</html>", "Sans", Font.PLAIN, 12) : new Label(new ImageIcon(fileData));
+        else {
+            FileContent = new Label(new ImageIcon(fileData));
         }
-    });
-}
 
-public static MouseListener getMouseListener() {
-    return new Mouselistener() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            JPanel panel = (JPanel) e.getSource();
-            int fileID = Integer.parseInt(panel.getname());
+        yes.addActionListener(new addActionListener() {
+            @Override
+            public void actionPerformed() {
+                File f = new File(fileName);
+                try {
+                    FileOutputStream output = new FileOutputStream(f);
+                    FileOutputStream.write(fileData);
+                    FileOutputStream.close();
+                }
+            }
+        });
+    }
 
-            for (FileDescriptor d : fileDescriptors) {
-                if (d.getID() == fileID) {
-                    JFrame preview = PopUp();
-                    preview.setVisible(true);
+    public static MouseListener getMouseListener() {
+        return new Mouselistener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JPanel panel = (JPanel) e.getSource();
+                int fileID = Integer.parseInt(panel.getname());
+
+                for (FileDescriptor d : fileDescriptors) {
+                    if (d.getID() == fileID) {
+                        JFrame preview = PopUp();
+                        preview.setVisible(true);
+                    }
                 }
             }
         }
     }
+
+    public static String getExtension(String filename) {
+        int i = filename.lastIndexOf('.');
+        return (i > 0) ? filename.substring(i + 1) : "No extension found";
+    }
 }
 
-public static String getExtension(String filename) {
-    int i = filename.lastIndexOf('.');
-    return (i > 0) ? filename.substring(i + 1) : "No extension found";
-}
