@@ -26,9 +26,7 @@ public class Client {
         choose.get().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                file[0] = selectFile(window);
-                System.out.println(file[0]);
-                if (file[0] != null) {
+                if ((file[0] = selectFile(window)) != null) {
                     window.setDescription(file[0].getName());
                     window.resetPanel(buttonContainer);
                     buttonContainer.add(send.get());
