@@ -5,7 +5,7 @@ import java.awt.Font;
 import Interface.*;
 
 public class Server {
-    static ArrayList<FileDescriptor> fd = new ArrayList<>();
+    static ArrayList<FileDescriptor> fileDescriptors = new ArrayList<>();
 
     public static void main(String[] args) {
         int fileID = 0;
@@ -48,7 +48,8 @@ public class Server {
                             fileRow.setName(String.valueOf(fileID));
                             fileRow.addMouseListener(getMouseListener());
                             fileRow.add(filename);
-                            spContainer.add()
+                            spContainer.add(fileRow);
+                            window.get().revalidate;
                         }
                     }
                 }
@@ -57,6 +58,49 @@ public class Server {
         }
     }
  
+}
+
+public static JFrame PopUp(String fileName, String fileExtension, byte[] fileData) {
+    Window popUp = new Window("White Rabbit File Downloader", "File Downloader", "Are you sure you want to download " + fileName);
+
+    Label FileContent;
+    JPanel buttons = new JPanel();
+    buttons.setBorder(new EmptyBorder(21, 0, 10, 0));
+    Button yes = new Button("Yes");
+    Button no = new Button("No");
+    buttons.add(yes);
+    buttons.add(no);
+
+    FileContent = (fileExtension.equalsIgnoreCase("txt")) new Label("<html>" + new String(fileData) + "</html>", "Sans", Font.PLAIN, 12) : new Label(new ImageIcon(fileData));
+
+    yes.addActionListener(new addActionListener() {
+        @Override
+        public void actionPerformed() {
+            File f = new File(fileName);
+            try {
+                FileOutputStream output = new FileOutputStream(f);
+                FileOutputStream.write(fileData);
+                FileOutputStream.close();
+            }
+        }
+    });
+}
+
+public static MouseListener getMouseListener() {
+    return new Mouselistener() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            JPanel panel = (JPanel) e.getSource();
+            int fileID = Integer.parseInt(panel.getname());
+
+            for (FileDescriptor d : fileDescriptors) {
+                if (d.getID() == fileID) {
+                    JFrame preview = PopUp();
+                    preview.setVisible(true);
+                }
+            }
+        }
+    }
 }
 
 public static String getExtension(String filename) {

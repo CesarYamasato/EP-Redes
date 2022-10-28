@@ -4,7 +4,7 @@ public class FileDescriptor {
     private byte[] data;
     private String type;
 
-    public File(int id, String name, byte[] data, String type) {
+    public FileDescriptor(int id, String name, byte[] data, String type) {
         this.id = id;
         this.name = name;
         this.data = data;
