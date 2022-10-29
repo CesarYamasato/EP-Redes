@@ -429,6 +429,7 @@ public class Peer implements Runnable{
 				break;
 			case 2:
 				selectFile();
+				receiveFiles();
 				break;
 			case 3:
 				selectFolder();
