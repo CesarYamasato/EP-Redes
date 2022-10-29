@@ -123,7 +123,7 @@ class Client{
 	//Connects to another peer's serverSocket
 		public boolean connect(){
 			try {
-				clientSocket = new Socket("localhost", 25565);
+				clientSocket = new Socket("25.68.101.177", 25565);
 				out = new DataOutputStream(clientSocket.getOutputStream());
 				in = new DataInputStream(clientSocket.getInputStream());
 				return true;
@@ -267,7 +267,7 @@ public class Peer implements Runnable{
 	//Connects to another peer's serverSocket
 	public boolean connect(){
 		try {
-			clientSocket = new Socket("localhost", 25565);
+			clientSocket = new Socket("25.68.101.177", 25565);
 			out = new DataOutputStream(clientSocket.getOutputStream());
 			in = new DataInputStream(clientSocket.getInputStream());
 			return true;
@@ -480,7 +480,7 @@ public class Peer implements Runnable{
 			if(args[0].equals("-s")) {
 				peer.createServer();
 				peer.sendListDirectory();
-				peer.receiveRequest();
+				while (true) peer.receiveRequest();
 				//File file = new File("teste.txt");
 				//FileSender fileSender = new FileSender(peer.clientSocket);
 				//fileSender.sendFile(file);
@@ -490,9 +490,9 @@ public class Peer implements Runnable{
 				//peer.sendRequest();
 				System.out.println("HELLO");
 				peer.receiveListDirectory();
-				peer.sendRequest();
+				while(true) peer.sendRequest();
 				
-				peer.receiveFiles();
+				//peer.receiveFiles();
 				//FileReceiver fileReceiver = new FileReceiver(peer.clientSocket);
 				//fileReceiver.receiveFile();
 			}
