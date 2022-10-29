@@ -436,7 +436,7 @@ public class Peer implements Runnable{
 				break;
 			}
 		}
-		systemIn.close();
+		//systemIn.close();
 	}
 	
 	//Processes client requests for files
