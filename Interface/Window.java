@@ -29,6 +29,10 @@ public class Window {
         window.add(description.get());
     }
 
+    public void add(Label label) {
+        window.add(label.get());
+    }
+
     public void add(Container container) {
         window.add(container.get());
     }

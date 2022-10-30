@@ -9,18 +9,22 @@ public class Container {
 
     public Container(int orientation) {
         if (orientation == BoxLayout.Y_AXIS) {
-            container.setLayout(new BoxLayout(spContainer, BoxLayout.Y_AXIS));
+            container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         } else {
             container.setBorder(new EmptyBorder(21, 0, 10, 0));
         }
     }
 
-    public void add(Interface.Button b) {
+    public void add(Button b) {
         container.add(b.get());
     }
 
     public void add(Label l) {
         container.add(l.get());
+    }
+
+    public void add(Container c) {
+        container.add(c.get());
     }
 
     public JPanel get() {
