@@ -5,9 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import Interface.*;
 
 public class Client {
@@ -16,7 +15,7 @@ public class Client {
         Window window = new Window("White Rabbit Client", "White Rabbit", "Choose a file to send");
 
         // Button placement
-        Container buttonContainer = new Container();
+        Container buttonContainer = new Container(BoxLayout.X_AXIS);
         Interface.Button choose = new Interface.Button("Choose file");
         Interface.Button send = new Interface.Button("Send file");
         Interface.Button cancel = new Interface.Button("Cancel");
@@ -38,7 +37,7 @@ public class Client {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (file[0] != null) {
-                   sendFile(file[0]);
+                    sendFile(file[0]);
                 }
             }
         });
@@ -61,8 +60,7 @@ public class Client {
         JFileChooser menu = new JFileChooser();
         menu.setDialogTitle("Choose a file to send");
 
-        return (menu.showOpenDialog(window.get()) == JFileChooser.APPROVE_OPTION) ?
-        menu.getSelectedFile() : null;
+        return (menu.showOpenDialog(window.get()) == JFileChooser.APPROVE_OPTION) ? menu.getSelectedFile() : null;
     }
 
     public static void sendFile(File file) {

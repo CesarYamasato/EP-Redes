@@ -1,9 +1,12 @@
 package Interface;
 
 import java.awt.Font;
+import java.awt.ScrollPane;
+
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
 public class Window {
@@ -30,6 +33,10 @@ public class Window {
         window.add(container.get());
     }
 
+    public void add(JScrollPane scrollPane) {
+        window.add(scrollPane);
+    }
+
     public void setDescription(String text) {
         description.get().setText(text);
     }
@@ -40,5 +47,9 @@ public class Window {
 
     public void draw() {
         window.setVisible(true);
+    }
+
+    public void close() {
+        window.dispose();
     }
 }

@@ -267,7 +267,7 @@ public class Peer implements Runnable{
 	//Connects to another peer's serverSocket
 	public boolean connect(){
 		try {
-			clientSocket = new Socket("25.68.101.177", 25565);
+			clientSocket = new Socket("25.8.38.70", 25565);
 			out = new DataOutputStream(clientSocket.getOutputStream());
 			in = new DataInputStream(clientSocket.getInputStream());
 			return true;

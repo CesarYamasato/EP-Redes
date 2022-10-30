@@ -26,4 +26,20 @@ public class FileDescriptor {
     public void setType(String type) {
         this.type = type;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public String getType() {
+        return type;
+    }
 }
