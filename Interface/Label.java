@@ -18,9 +18,8 @@ public class Label {
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
     }
 
-    public Label(ImageIcon image) {
-        label = new JLabel(image);
-        label.setSize(new Dimension(200, 200));
+    public Label(ImageIcon image, int alignment) {
+        label = new JLabel(image, alignment);
     }
 
     public JLabel get() {
