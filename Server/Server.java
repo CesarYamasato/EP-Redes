@@ -1,5 +1,3 @@
-package Server;
-
 import Interface.*;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -83,15 +81,10 @@ public class Server {
     public static Window PopUp(String fileName, String fileExtension, byte[] fileData) {
         Window popUp = new Window("White Rabbit File Downloader", "File Downloader",
                 "Are you sure you want to download " + fileName + "?\nFiles will be downloaded at the current folder.");
-        Label fileContent;
-        if (fileExtension.equalsIgnoreCase("txt")) {
-            fileContent = new Label("<html>" + new String(fileData) + "</html>", SwingConstants.LEFT, "Sans",
-                    Font.PLAIN, 12);
-        } else {
-            ImagePreview preview = new ImagePreview(fileData, 400);
-            System.out.println("Preview:" + preview.get());
-            fileContent = new Label(preview.get());
-        }
+        Label fileContent = (fileExtension.equalsIgnoreCase("txt"))
+                ? new Label("<html>" + new String(fileData) + "</html>", SwingConstants.LEFT, "Sans",
+                        Font.PLAIN, 12)
+                : new Label(ImagePreview.fitImage(fileData, 400));
         Container buttons = new Container(BoxLayout.X_AXIS);
         Button yes = new Button("Yes");
         Button no = new Button("No");

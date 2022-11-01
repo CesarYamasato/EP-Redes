@@ -1,5 +1,3 @@
-package Server;
-
 public class FileDescriptor {
     private int id;
     private String name;
