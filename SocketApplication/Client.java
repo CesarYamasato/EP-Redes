@@ -13,6 +13,7 @@ public class Client extends SocketApplication{
 	//Connects to another peer's serverSocket
 		public Client(Socket clientSocket) throws UnknownHostException, IOException{
 				super(clientSocket);
+				receiveListDirectory();
 		}
 		
 		//Receives the List of items the other peer can send over
@@ -71,6 +72,11 @@ public class Client extends SocketApplication{
 			printDirectory();
 			int requestFolder = systemIn.nextInt();
 			out.writeInt(requestFolder);
+		}
+		
+		//Sends handshake
+		public void sendAwake() throws IOException {
+			out.write(0);
 		}
 		
 		//Sends a request to the other peer

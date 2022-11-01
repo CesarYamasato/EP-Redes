@@ -14,7 +14,7 @@ abstract class SocketApplication{
 	protected Scanner systemIn;
 	
 	public SocketApplication(Socket clientSocket) throws UnknownHostException, IOException {
-		clientSocket = clientSocket;
+		this.clientSocket = clientSocket;
 		out = new DataOutputStream(clientSocket.getOutputStream());
 		in = new DataInputStream(clientSocket.getInputStream());
 		systemIn = new Scanner(System.in);
