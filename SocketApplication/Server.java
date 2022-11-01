@@ -17,6 +17,7 @@ public class Server extends SocketApplication{
 		public Server(Socket clientSocket) throws UnknownHostException, IOException{
 			super(clientSocket);
 			myPath = System.getProperty("user.dir");
+			sendListDirectory();
 		}
 		//Sends the List of items in the folder on which the .class file is on
 		private void sendListDirectory() throws IOException {

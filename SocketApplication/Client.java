@@ -13,6 +13,7 @@ public class Client extends SocketApplication{
 	//Connects to another peer's serverSocket
 		public Client(Socket clientSocket) throws UnknownHostException, IOException{
 				super(clientSocket);
+				receiveListDirectory();
 		}
 		
 		//Receives the List of items the other peer can send over
