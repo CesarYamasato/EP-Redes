@@ -1,112 +1,138 @@
-import java.util.ArrayList
+import Interface.*;
+import java.awt.Font;
+import java.awt.event.*;
+import java.io.File;
+import java.io.FileOutputStream; 
+import java.io.DataInputStream;
+import javax.swing.ImageIcon;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.ArrayList;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import java.awt.Font;
-import Interface.*;
+
 
 public class Server {
     static ArrayList<FileDescriptor> fileDescriptors = new ArrayList<>();
 
-    public static void main(String[] args) {
+    private class Listener implements MouseListener {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            JPanel panel = (JPanel) e.getSource();
+            int fileID = Integer.parseInt(panel.getName());
+
+            for (FileDescriptor d : fileDescriptors) {
+                if (d.getId() == fileID) {
+                    Window preview = PopUp(d.getName(), d.getType(), d.getData());
+                    preview.draw();
+                }
+            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {}
+
+        @Override
+        public void mouseReleased(MouseEvent e) {}
+
+        @Override
+        public void mouseEntered(MouseEvent e) {}
+
+        @Override
+        public void mouseExited(MouseEvent e) {}
+    }
+
+    public static void main(String[] args) throws IOException {
         int fileID = 0;
 
         Window window = new Window("White Rabbit Server", "White Rabbit", "Choose a file to download");
 
-        JPanel spContainer = new JPanel();
-        JPanel.setLayout(new BoxLayout(apContainer, BoxLayout.Y_AXIS));
+        Container scrollPaneContainer = new Container(BoxLayout.Y_AXIS);
+        JScrollPane scrollPane = new JScrollPane(Container);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        JScrollPane sp = new JScrollPane(spContainer);
-        JScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-        window.get().add(sp)
-        window.draw(true);
+        window.add(scrollPane);
+        window.draw();
 
         ServerSocket ss = new ServerSocket(25565);
 
         while (true) {
             try {
-                Socket s = serverSocket.accept();
-                DataInputStream input = new DataInputStream(socket.getInputStream());
-                int fileNameLength = DataInputStream.readInt();
 
+                // Receive files, if available.
+                DataInputStream input = new DataInputStream(ss.accept().getInputStream());
+                int fileNameLength = input.readInt();
+
+                // if files were received, list it.
                 if (fileNameLength > 0) {
                     byte[] fileNameBytes = new byte[fileNameLength];
                     input.readFully(fileNameBytes, 0, fileNameBytes.length);
                     String fileName = new String(fileNameBytes);
-
                     int fileContentLength = input.readInt();
+                    byte[] fileContentBytes = new byte[fileContentLength];
 
                     if (fileContentLength > 0) {
-                        byte[] fileContentBytes = new byte[fileContentLength];
                         input.readFully(fileContentBytes, 0, fileContentLength);
-
-                        JPanel fileRow = new JPanel();
-                        fileRow.setLayout(newBoxLayout(fileRow, BoxLayout.Y_AXIS));
-                        Label filename = new Label(filename, "Sans", Font.PLAIN, 20);
-
-                        if (getExtension(filename).equalsIgnoreCase("txt")) {
-                            fileRow.setName(String.valueOf(fileID));
-                            fileRow.addMouseListener(getMouseListener());
-                            fileRow.add(filename);
-                            spContainer.add(fileRow);
-                            window.get().revalidate;
-                        }
+                        Container fileRow = new Container(BoxLayout.Y_AXIS);
+                        Label entry = new Label(fileName, "Sans", Font.PLAIN, 20);
+                        fileRow.get().setName(String.valueOf(fileID));
+                        fileRow.get().addMouseListener(new Listener());
+                        fileRow.add(entry);
+                        scrollPaneContainer.add(fileRow);
+                        window.get().revalidate();
                     }
+                    fileDescriptors.add(new FileDescriptor(fileID, fileName, fileContentBytes, getExtension(fileName)));
                 }
+            } catch (IOException exception) {
+                exception.printStackTrace();
             }
         }
     }
 
-    public static JFrame PopUp(String fileName, String fileExtension, byte[] fileData) {
-        Window popUp = new Window("White Rabbit File Downloader", "File Downloader", "Are you sure you want to download " + fileName);
+    public static Window PopUp(String fileName, String fileExtension, byte[] fileData) {
+        Window popUp = new Window("White Rabbit File Downloader", "File Downloader",
+                "Are you sure you want to download " + fileName);
 
-        Label FileContent;
-        JPanel buttons = new JPanel();
-        buttons.setBorder(new EmptyBorder(21, 0, 10, 0));
+        Label fileContent = (fileExtension.equalsIgnoreCase("txt"))
+                ? new Label("<html>" + new String(fileData) + "</html>", "Sans", Font.PLAIN, 12)
+                : new Label(new ImageIcon(fileData));
+        Container buttons = new Container(BoxLayout.X_AXIS);
         Button yes = new Button("Yes");
         Button no = new Button("No");
         buttons.add(yes);
         buttons.add(no);
 
-        if (fileExtension.equalsIgnoreCase("txt")) {
-            FileContent = (fileExtension.equalsIgnoreCase("txt")) ? new Label("<html>" + new String(fileData) + "</html>", "Sans", Font.PLAIN, 12) : new Label(new ImageIcon(fileData));
-        else {
-            FileContent = new Label(new ImageIcon(fileData));
-        }
-
-        yes.addActionListener(new addActionListener() {
+        yes.get().addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed() {
-                File f = new File(fileName);
-                try {
-                    FileOutputStream output = new FileOutputStream(f);
-                    FileOutputStream.write(fileData);
-                    FileOutputStream.close();
-                }
+            public void actionPerformed(ActionEvent e) {
+                saveFile(fileName, fileData);
+                popUp.close();
             }
         });
+        no.get().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                popUp.close();
+            }
+        });
+        popUp.add(fileContent);
+        popUp.add(buttons);
+        return popUp;
     }
 
-    public static MouseListener getMouseListener() {
-        return new Mouselistener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                JPanel panel = (JPanel) e.getSource();
-                int fileID = Integer.parseInt(panel.getname());
+    public static String getExtension(String fileName) {
+        int i = fileName.lastIndexOf('.'); 
+        return (i > 0) ? fileName.substring(i + 1) : "No extension found";
+    }
 
-                for (FileDescriptor d : fileDescriptors) {
-                    if (d.getID() == fileID) {
-                        JFrame preview = PopUp();
-                        preview.setVisible(true);
-                    }
-                }
-            }
+    public static void saveFile(String fileName, byte [] fileData) {
+        try {
+            FileOutputStream output = new FileOutputStream(new File(fileName));
+            output.write(fileData);
+            output.close();
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
-
-    public static String getExtension(String filename) {
-        int i = filename.lastIndexOf('.');
-        return (i > 0) ? filename.substring(i + 1) : "No extension found";
-    }
 }
-

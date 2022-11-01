@@ -18,14 +18,15 @@ public class Peer{
 		serverSocket.close();
 	}
 	
+
 	public void receiveRequest() throws IOException {
 		server.receiveRequest();
-	}
+}
 	
 	//====================================== Client Side ============================================================//
 	
-	public void connect() throws UnknownHostException, IOException {
-		Socket clientSocket = new Socket("localhost",25565);
+	public void connect(String IP) throws UnknownHostException, IOException {
+		Socket clientSocket = new Socket(IP,25565);
 		client = new Client(clientSocket);
 	}
 	
@@ -43,7 +44,7 @@ public class Peer{
 				//fileSender.sendFile(file);
 			}
 			else if(args[0].equals("-c")) {
-				peer.connect();
+				peer.connect(args[1]);
 				//peer.sendRequest();
 				System.out.println("HELLO");
 				//peer.receiveListDirectory();
