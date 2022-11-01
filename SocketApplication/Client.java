@@ -74,6 +74,11 @@ public class Client extends SocketApplication{
 			out.writeInt(requestFolder);
 		}
 		
+		//Sends handshake
+		public void sendAwake() throws IOException {
+			out.write(0);
+		}
+		
 		//Sends a request to the other peer
 		public void sendRequest() throws IOException {
 			System.out.println(

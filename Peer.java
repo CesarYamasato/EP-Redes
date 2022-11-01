@@ -3,15 +3,15 @@ import java.net.*;
 
 import SocketApplication.*;
 
-public class Peer{
+public class Peer extends Thread{
 	
 	private Server server;
 	private Client client;
 	
 	//====================================== Server Side =============================================================//
 	
-	public void createServer() throws UnknownHostException, IOException {
-		ServerSocket serverSocket = new ServerSocket(25565);
+	public void createServer(int port) throws UnknownHostException, IOException {
+		ServerSocket serverSocket = new ServerSocket(port);
 		Socket clientSocket = serverSocket.accept();
 		server = new Server(clientSocket);
 		
@@ -21,38 +21,49 @@ public class Peer{
 
 	public void receiveRequest() throws IOException {
 		server.receiveRequest();
-}
+	}
+	
+	public void waitAwake() throws IOException {
+		server.waitAwake();
+	}
+	
+	public void run() {
+		try {
+			while (true)receiveRequest();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	//====================================== Client Side ============================================================//
 	
-	public void connect(String IP) throws UnknownHostException, IOException {
-		Socket clientSocket = new Socket(IP,25565);
+	public void connect(String IP, int port) throws UnknownHostException, IOException {
+		Socket clientSocket = new Socket(IP,port);
 		client = new Client(clientSocket);
 	}
 	
 	public void sendRequest() throws IOException {
 		client.sendRequest();
 	}
+	
+	public void sendAwake() throws IOException {
+		client.sendAwake();
+	}
+	
 	public static void main(String[] args) throws IOException {
 			Peer peer = new Peer();
 			if(args[0].equals("-s")) {
-				peer.createServer();
-				//peer.sendListDirectory();
-				while (true) peer.receiveRequest();
-				//File file = new File("teste.txt");
-				//FileSender fileSender = new FileSender(peer.clientSocket);
-				//fileSender.sendFile(file);
+				peer.createServer(Integer.parseInt(args[1]));
+				peer.waitAwake();
+				peer.connect(args[2] ,Integer.parseInt(args[3]));
 			}
 			else if(args[0].equals("-c")) {
-				peer.connect(args[1]);
-				//peer.sendRequest();
-				System.out.println("HELLO");
-				//peer.receiveListDirectory();
-				while(true) peer.sendRequest();
-				
-				//peer.receiveFiles();
-				//FileReceiver fileReceiver = new FileReceiver(peer.clientSocket);
-				//fileReceiver.receiveFile();
+				peer.connect(args[2] ,Integer.parseInt(args[3]));
+				peer.sendAwake();
+				peer.createServer(Integer.parseInt(args[1]));
 			}
+			peer.start();
+			while(true) peer.sendRequest();
 	}
 }

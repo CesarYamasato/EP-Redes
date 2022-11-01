@@ -24,16 +24,21 @@ public class Server extends SocketApplication{
 			File Directory = new File(myPath);
 			String contents[] = Directory.list();
 			boolean isFolder;
-			myDirectory = new Directory[contents.length];
+			myDirectory = new Directory[contents.length + 1];
+			myDirectory[0] = new Directory("..", true);
 			
-			out.writeInt(contents.length);
+			out.writeInt(myDirectory.length);
 			
-		      for(int i=0; i<contents.length; i++) {
-		    	  out.writeInt(contents[i].length());
-		    	  isFolder = new File(contents[i]).isDirectory();
+			out.writeInt(myDirectory[0].getList().length());
+			out.writeBoolean(true);
+			out.writeBytes(myDirectory[0].getList());
+			
+		      for(int i=1; i<myDirectory.length; i++) {
+		    	  out.writeInt(contents[i-1].length());
+		    	  isFolder = new File(contents[i-1]).isDirectory();
 		    	  out.writeBoolean(isFolder);
-		    	  out.writeBytes(contents[i]);
-		    	  myDirectory[i] = new Directory(contents[i],isFolder);
+		    	  out.writeBytes(contents[i-1]);
+		    	  myDirectory[i] = new Directory(contents[i-1],isFolder);
 		      }
 		}
 		
@@ -68,9 +73,17 @@ public class Server extends SocketApplication{
 			int requestFolder = in.readInt();
 			myPath +=  "/"+ myDirectory[requestFolder].getList();
 			String[] directory = new File(myPath).list();
-			for(int i = 0; i < directory.length; i++) myDirectory[i]= new Directory(directory[i], new File(directory[i]).isDirectory());
+			myDirectory = new Directory[directory.length+1];
+			for(int i = 1; i < myDirectory.length; i++) myDirectory[i]= new Directory(directory[i-1], new File(directory[i-1]).isDirectory());
 		
 		}
+		
+		//Waits for handshake
+		public void waitAwake() throws IOException {
+			while(in.available() == 0);
+			in.read();
+		}
+		
 		public void receiveRequest() throws IOException {
 			int request = in.readInt();
 			out.writeInt(9999);
