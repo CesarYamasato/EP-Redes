@@ -2,11 +2,11 @@ package Interface;
 
 import java.awt.Font;
 import java.awt.ScrollPane;
-
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
 public class Window {
@@ -23,8 +23,8 @@ public class Window {
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Title placement
-        header = new Label(title, "Sans", Font.BOLD, 24);
-        description = new Label(text, "Sans", Font.PLAIN, 12);
+        header = new Label(title, SwingConstants.CENTER, "Sans", Font.BOLD, 24);
+        description = new Label(text, SwingConstants.CENTER, "Sans", Font.PLAIN, 12);
         window.add(header.get());
         window.add(description.get());
     }
