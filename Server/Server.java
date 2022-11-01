@@ -80,11 +80,11 @@ public class Server {
 
     public static Window PopUp(String fileName, String fileExtension, byte[] fileData) {
         Window popUp = new Window("White Rabbit File Downloader", "File Downloader",
-                "Are you sure you want to download " + fileName + "?\nFiles will be downloaded at the current folder.");
+                "Are you sure you want to download " + fileName + " It'll be downloaded at the current folder.");
         Label fileContent = (fileExtension.equalsIgnoreCase("txt"))
                 ? new Label("<html>" + new String(fileData) + "</html>", SwingConstants.LEFT, "Sans",
                         Font.PLAIN, 12)
-                : new Label(ImagePreview.fitImage(fileData, 400));
+                : new Label(ImagePreview.fitImage(fileData, 400), SwingConstants.CENTER);
         Container buttons = new Container(BoxLayout.X_AXIS);
         Button yes = new Button("Yes");
         Button no = new Button("No");
