@@ -2,6 +2,7 @@ package Interface;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 public class Container {
@@ -29,6 +30,10 @@ public class Container {
 
     public void add(TextField t) {
         container.add(t.get());
+    }
+
+    public void add(JScrollPane s) {
+        container.add(s);
     }
 
     public JPanel get() {

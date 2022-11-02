@@ -18,6 +18,13 @@ public class Label {
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
     }
 
+    public Label(String text, int align, Font font) {
+        label = new JLabel(text, align);
+        label.setFont(font);
+        label.setBorder(new EmptyBorder(font.getSize() / 5 * 4, 0, font.getSize() / 2, 0));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+    }
+
     public Label(ImageIcon image, int alignment) {
         label = new JLabel(image, alignment);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);

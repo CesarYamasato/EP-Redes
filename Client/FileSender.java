@@ -1,14 +1,26 @@
 package Client;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.Socket;
+
+import javax.swing.BoxLayout;
+
+import Interface.Button;
+import Interface.Container;
+import Interface.Window;
 
 public class FileSender {
     public static void main(Window window, File file, String ip, String port) {
         window.reset();
         window.setDescription("Send " + file.getName() + "?");
         Container buttonContainer = new Container(BoxLayout.Y_AXIS);
-        Button send = new Button("Send", font);
-        Button cancel = new Button("Cancel", font);
+        Button send = new Button("Send", window.getFont());
+        Button cancel = new Button("Cancel", window.getFont());
         window.add(buttonContainer);
 
         send.get().addActionListener(new ActionListener() {

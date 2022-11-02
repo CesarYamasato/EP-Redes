@@ -1,25 +1,37 @@
 package Server;
 
-import javax.swing.BoxLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
+import javax.swing.BoxLayout;
+import javax.swing.SwingConstants;
+
+import Interface.Container;
+import Interface.Button;
 import Interface.Window;
+import Interface.ImagePreview;
+import Interface.Label;
 
 public class FileDownloader {
     public static void main(Window window, FileDescriptor d) {
 
         Window preview = new Window("White Rabbit File Downloader", "File Downloader",
                 "Are you sure you want to download " + d.getName() + " in the current folder?",
-                new Dimension(600, 600));
+                window.getFont(), new Dimension(600, 600));
         Container container = new Container(BoxLayout.Y_AXIS);
-        if (d.getType().equalseIgnoreCase("jpg")
-                || d.getType().equalseIgnoreCase("png")
-                || d.getType().equalseIgnoreCase("gif")
-                || d.getType().equalseIgnoreCase("jpeg")) {
-            container.add(new Label(ImagePreview.fitImage(d.getData(), 400)));
+        if (d.getType().equalsIgnoreCase("jpg")
+                || d.getType().equalsIgnoreCase("png")
+                || d.getType().equalsIgnoreCase("gif")
+                || d.getType().equalsIgnoreCase("jpeg")) {
+            container.add(new Label(ImagePreview.fitImage(d.getData(), 400), SwingConstants.CENTER));
         }
         Container buttons = new Container(BoxLayout.X_AXIS);
-        Button yes = new Button("Yes");
-        Button no = new Button("No");
+        Button yes = new Button("Yes", window.getFont());
+        Button no = new Button("No", window.getFont());
         buttons.add(yes);
         buttons.add(no);
         preview.add(buttons);
@@ -38,11 +50,6 @@ public class FileDownloader {
             }
         });
         window.draw();
-    }
-
-    public static String getExtension(String fileName) {
-        int i = fileName.lastIndexOf('.');
-        return (i > 0) ? fileName.substring(i + 1) : "No extension found";
     }
 
     public static void saveFile(String fileName, byte[] fileData) {

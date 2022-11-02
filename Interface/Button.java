@@ -16,6 +16,14 @@ public class Button {
         button.setBorder(new EmptyBorder(3, 3, 3, 3));
     }
 
+    public Button(String label, Font font) {
+        button = new JButton(label);
+
+        button.setPreferredSize(new Dimension(200, 48));
+        button.setFont(font);
+        button.setBorder(new EmptyBorder(3, 3, 3, 3));
+    }
+
     public JButton get() {
         return button;
     }

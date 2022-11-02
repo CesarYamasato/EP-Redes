@@ -26,9 +26,9 @@ public class Server {
         window.reset();
         window.setDescription("Select a port to await a connection");
         Container container = new Container(BoxLayout.Y_AXIS);
-        TextField port = new TextField("Port to use:", "1234", 15, font);
-        Button connect = new Button("Connect", font);
-        Button cancel = new Button("Cancel", font);
+        TextField port = new TextField("Port to use:", "1234", 15, window.getFont());
+        Button connect = new Button("Connect", window.getFont());
+        Button cancel = new Button("Cancel", window.getFont());
         Container buttonContainer = new Container(BoxLayout.X_AXIS);
         buttonContainer.add(connect);
         buttonContainer.add(cancel);

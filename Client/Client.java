@@ -18,10 +18,10 @@ public class Client {
         window.setDescription("Provide an address to connect to");
 
         Container container = new Container(BoxLayout.Y_AXIS);
-        TextField ip = new TextField("Contact's IP:", "localhost", 15, font);
-        TextField port = new TextField("Port to use:", "1234", 15, font);
-        Button connect = new Button("Connect", font);
-        Button cancel = new Button("Cancel", font);
+        TextField ip = new TextField("Contact's IP:", "localhost", 15, window.getFont());
+        TextField port = new TextField("Port to use:", "1234", 15, window.getFont());
+        Button connect = new Button("Connect", window.getFont());
+        Button cancel = new Button("Cancel", window.getFont());
         Container buttonContainer = new Container(BoxLayout.X_AXIS);
         buttonContainer.add(connect);
         buttonContainer.add(cancel);

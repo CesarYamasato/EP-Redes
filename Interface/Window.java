@@ -31,13 +31,28 @@ public class Window {
         window.add(description.get());
     }
 
+    public Window(String name, String title, String text, Font font, Dimension size) {
+        window = new JFrame(name);
+
+        // Define window properties
+        window.setLayout(new BoxLayout(window.getContentPane(), BoxLayout.Y_AXIS));
+        window.setMinimumSize(size);
+        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        // Title placement
+        header = new Label(title, SwingConstants.CENTER, font);
+        description = new Label(text, SwingConstants.CENTER, font);
+        window.add(header.get());
+        window.add(description.get());
+    }
+
     public void add(Container container) {
         this.container = container;
         window.add(container.get());
     }
 
     public void reset() {
-        window.remove(container);
+        window.remove(container.get());
     }
 
     public void setDescription(String text) {
@@ -52,8 +67,8 @@ public class Window {
         return header.get().getText();
     }
 
-    public String getFont() {
-        return header.get().getFont();
+    public Font getFont() {
+        return description.get().getFont();
     }
 
     public void draw() {

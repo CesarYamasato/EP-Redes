@@ -1,3 +1,4 @@
+import Interface.Button;
 import Interface.*;
 import Server.*;
 import Client.*;
@@ -30,16 +31,16 @@ public class WhiteRabbit {
         Dimension minSize = new Dimension(400, 400);
         Window window = new Window(title, title, "An application to send or receive files over a TCP connection", font,
                 new Dimension(400, 400));
-        window.add(new Options());
+        window.add(Options(window));
         window.draw();
     }
 
-    public Container Options() {
+    public static Container Options(Window window) {
         Container container = new Container(BoxLayout.Y_AXIS);
-        Button send = new Button("Send files", font);
-        Button recieve = new Button("Recieve files", font);
-        buttonContainer.add(send);
-        buttonContainer.add(recieve);
+        Button send = new Button("Send files", window.getFont());
+        Button recieve = new Button("Recieve files", window.getFont());
+        container.add(send);
+        container.add(recieve);
 
         send.get().addActionListener(new ActionListener() {
             @Override
