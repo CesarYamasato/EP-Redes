@@ -1,5 +1,6 @@
 package Interface;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.ScrollPane;
 import javax.swing.BoxLayout;
@@ -13,32 +14,30 @@ public class Window {
 
     private JFrame window;
     private Label header, description;
+    private Container container;
 
-    public Window(String name, String title, String text) {
+    public Window(String name, String title, String text, String font, Dimension size) {
         window = new JFrame(name);
 
         // Define window properties
-        window.setSize(400, 400);
         window.setLayout(new BoxLayout(window.getContentPane(), BoxLayout.Y_AXIS));
+        window.setMinimumSize(size);
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Title placement
-        header = new Label(title, SwingConstants.CENTER, "Sans", Font.BOLD, 24);
-        description = new Label(text, SwingConstants.CENTER, "Sans", Font.PLAIN, 12);
+        header = new Label(title, SwingConstants.CENTER, font, Font.BOLD, 24);
+        description = new Label(text, SwingConstants.CENTER, font, Font.PLAIN, 12);
         window.add(header.get());
         window.add(description.get());
     }
 
-    public void add(Label label) {
-        window.add(label.get());
-    }
-
     public void add(Container container) {
+        this.container = container;
         window.add(container.get());
     }
 
-    public void add(JScrollPane scrollPane) {
-        window.add(scrollPane);
+    public void reset() {
+        window.remove(container);
     }
 
     public void setDescription(String text) {
@@ -47,6 +46,14 @@ public class Window {
 
     public JFrame get() {
         return window;
+    }
+
+    public String getTitle() {
+        return header.get().getText();
+    }
+
+    public String getFont() {
+        return header.get().getFont();
     }
 
     public void draw() {

@@ -1,4 +1,7 @@
+package Server;
+
 import Interface.*;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,108 +22,33 @@ import javax.swing.SwingConstants;
 public class Server {
     static ArrayList<FileDescriptor> fileDescriptors = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException {
-        int fileID = 0;
+    public static void main(Window window) {
+        window.reset();
+        window.setDescription("Select a port to await a connection");
+        Container container = new Container(BoxLayout.Y_AXIS);
+        TextField port = new TextField("Port to use:", "1234", 15, font);
+        Button connect = new Button("Connect", font);
+        Button cancel = new Button("Cancel", font);
+        Container buttonContainer = new Container(BoxLayout.X_AXIS);
+        buttonContainer.add(connect);
+        buttonContainer.add(cancel);
+        container.add(port);
+        window.add(container);
 
-        Window window = new Window("White Rabbit Server", "White Rabbit", "Waiting for a connection");
+        connect.get().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FileListing.main(window, new ServerSocket(Integer.parseInt(port.getText())));
+            }
+        });
 
-        Container scrollPaneContainer = new Container(BoxLayout.Y_AXIS);
-        JScrollPane scrollPane = new JScrollPane(scrollPaneContainer.get());
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-        window.add(scrollPane);
+        cancel.get().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                window.close();
+                WhiteRabbit.main();
+            }
+        });
         window.draw();
-
-        ServerSocket ss = new ServerSocket(25565);
-
-        while (true) {
-            try {
-                // Receive files, if available.
-                DataInputStream input = new DataInputStream(ss.accept().getInputStream());
-                int fileNameLength = input.readInt();
-
-                // if files were received, list them.
-                if (fileNameLength > 0) {
-                    window.setDescription("Choose a file to download");
-                    byte[] fileNameBytes = new byte[fileNameLength];
-                    input.readFully(fileNameBytes, 0, fileNameBytes.length);
-                    String fileName = new String(fileNameBytes);
-                    int fileContentLength = input.readInt();
-                    byte[] fileContentBytes = new byte[fileContentLength];
-
-                    if (fileContentLength > 0) {
-                        input.readFully(fileContentBytes, 0, fileContentLength);
-                        Container fileRow = new Container(BoxLayout.Y_AXIS);
-                        Label entry = new Label(fileName, SwingConstants.LEFT, "Sans", Font.PLAIN, 20);
-                        fileRow.get().setName(String.valueOf(fileID));
-                        fileRow.get().addMouseListener(new MouseAdapter() {
-                            public void mouseClicked(MouseEvent e) {
-                                JPanel panel = (JPanel) e.getSource();
-                                int fileID = Integer.parseInt(panel.getName());
-
-                                for (FileDescriptor d : fileDescriptors) {
-                                    if (d.getId() == fileID) {
-                                        Window preview = PopUp(d.getName(), d.getType(), d.getData());
-                                        preview.draw();
-                                    }
-                                }
-                            }
-                        });
-                        fileRow.add(entry);
-                        scrollPaneContainer.add(fileRow);
-                        window.get().revalidate();
-                    }
-                    fileDescriptors.add(new FileDescriptor(fileID, fileName, fileContentBytes, getExtension(fileName)));
-                }
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-        }
-    }
-
-    public static Window PopUp(String fileName, String fileExtension, byte[] fileData) {
-        Window popUp = new Window("White Rabbit File Downloader", "File Downloader",
-                "Are you sure you want to download " + fileName + " It'll be downloaded at the current folder.");
-        Label fileContent = (fileExtension.equalsIgnoreCase("txt"))
-                ? new Label("<html>" + new String(fileData) + "</html>", SwingConstants.LEFT, "Sans",
-                        Font.PLAIN, 12)
-                : new Label(ImagePreview.fitImage(fileData, 400), SwingConstants.CENTER);
-        Container buttons = new Container(BoxLayout.X_AXIS);
-        Button yes = new Button("Yes");
-        Button no = new Button("No");
-        buttons.add(yes);
-        buttons.add(no);
-
-        yes.get().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveFile(fileName, fileData);
-                popUp.close();
-            }
-        });
-        no.get().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                popUp.close();
-            }
-        });
-        popUp.add(fileContent);
-        popUp.add(buttons);
-        return popUp;
-    }
-
-    public static String getExtension(String fileName) {
-        int i = fileName.lastIndexOf('.');
-        return (i > 0) ? fileName.substring(i + 1) : "No extension found";
-    }
-
-    public static void saveFile(String fileName, byte[] fileData) {
-        try {
-            FileOutputStream output = new FileOutputStream(new File(fileName));
-            output.write(fileData);
-            output.close();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
     }
 }

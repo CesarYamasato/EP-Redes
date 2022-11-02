@@ -20,6 +20,7 @@ public class Label {
 
     public Label(ImageIcon image, int alignment) {
         label = new JLabel(image, alignment);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
     }
 
     public JLabel get() {

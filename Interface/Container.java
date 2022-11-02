@@ -27,6 +27,10 @@ public class Container {
         container.add(c.get());
     }
 
+    public void add(TextField t) {
+        container.add(t.get());
+    }
+
     public JPanel get() {
         return container;
     }

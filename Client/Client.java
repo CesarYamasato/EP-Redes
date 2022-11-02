@@ -1,5 +1,6 @@
 package Client;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.DataOutputStream;
@@ -12,84 +13,37 @@ import javax.swing.JFileChooser;
 import Interface.*;
 
 public class Client {
-    public static void main(String[] args) {
-        final File[] file = new File[1];
-        Window window = new Window("White Rabbit Client", "White Rabbit", "Choose a file to send");
+    public static void main(Window window) {
+        window.reset();
+        window.setDescription("Provide an address to connect to");
 
-        // Button placement
+        Container container = new Container(BoxLayout.Y_AXIS);
+        TextField ip = new TextField("Contact's IP:", "localhost", 15, font);
+        TextField port = new TextField("Port to use:", "1234", 15, font);
+        Button connect = new Button("Connect", font);
+        Button cancel = new Button("Cancel", font);
         Container buttonContainer = new Container(BoxLayout.X_AXIS);
-        Interface.Button choose = new Interface.Button("Choose file");
-        Interface.Button send = new Interface.Button("Send file");
-        Interface.Button cancel = new Interface.Button("Cancel");
-        buttonContainer.add(choose);
+        buttonContainer.add(connect);
+        buttonContainer.add(cancel);
+        container.add(ip);
+        container.add(port);
+        container.add(buttonContainer);
+        window.add(container);
 
-        choose.get().addActionListener(new ActionListener() {
+        connect.get().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if ((file[0] = selectFile(window)) != null) {
-                    window.setDescription(file[0].getName());
-                    buttonContainer.reset();
-                    buttonContainer.add(send);
-                    buttonContainer.add(cancel);
-                }
-            }
-        });
-
-        send.get().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (file[0] != null) {
-                    sendFile(file[0]);
-                }
+                FileSelector.main(window, ip.getText(), port.getText());
             }
         });
 
         cancel.get().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                window.setDescription("Choose a file to send");
-                buttonContainer.reset();
-                buttonContainer.add(choose);
+                window.close();
+                WhiteRabbit.main();
             }
         });
-
-        // Add elements to the window's frame
-        window.add(buttonContainer);
         window.draw();
-    }
-
-    public static File selectFile(Window window) {
-        JFileChooser menu = new JFileChooser();
-        menu.setDialogTitle("Choose a file to send");
-
-        return (menu.showOpenDialog(window.get()) == JFileChooser.APPROVE_OPTION) ? menu.getSelectedFile() : null;
-    }
-
-    public static void sendFile(File file) {
-        try {
-            // Take file name and its length
-            String fileName = file.getName();
-            byte[] fileBytes = fileName.getBytes();
-
-            // Take file length and its contents
-            byte[] fileContents = new byte[(int) file.length()];
-
-            FileInputStream input = new FileInputStream(file);
-            input.read(fileContents);
-
-            // Create socket and data output stream
-            Socket s = new Socket("localhost", 25565);
-            DataOutputStream output = new DataOutputStream(s.getOutputStream());
-
-            // Send file name and its length
-            output.writeInt(fileBytes.length);
-            output.write(fileBytes);
-
-            // Send file length and its contents
-            output.writeInt(fileContents.length);
-            output.write(fileContents);
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
     }
 }
