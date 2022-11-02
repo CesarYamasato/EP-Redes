@@ -49,7 +49,7 @@ public class WhiteRabbit {
             }
         });
 
-        receive.get().addActionListener(new ActionListener() {
+        recieve.get().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Server.main(window);
