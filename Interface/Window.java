@@ -25,8 +25,8 @@ public class Window {
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Title placement
-        header = new Label(title, SwingConstants.CENTER, font, Font.BOLD, 24);
-        description = new Label(text, SwingConstants.CENTER, font, Font.PLAIN, 12);
+        header = new Label(title, SwingConstants.CENTER, font, Font.BOLD, 32);
+        description = new Label(text, SwingConstants.CENTER, font, Font.PLAIN, 16);
         window.add(header.get());
         window.add(description.get());
     }

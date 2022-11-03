@@ -1,5 +1,9 @@
 package Interface;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -8,12 +12,15 @@ import javax.swing.border.EmptyBorder;
 public class Container {
     JPanel container = new JPanel();
 
-    public Container(int orientation) {
-        if (orientation == BoxLayout.Y_AXIS) {
-            container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        } else {
-            container.setBorder(new EmptyBorder(21, 0, 10, 0));
-        }
+    public Container(Dimension size, int rows, int columns, int gap) {
+        container.setMaximumSize(size);
+        container.setLayout(new GridLayout(rows, columns, gap, gap));
+        container.setBorder(new EmptyBorder(gap, gap, gap, gap));
+        container.setAlignmentX(Component.CENTER_ALIGNMENT);
+    }
+
+    public void setDimension(Dimension size) {
+        container.setPreferredSize(size);
     }
 
     public void add(Button b) {

@@ -11,6 +11,7 @@ import java.net.Socket;
 import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
 import Interface.*;
+import main.WhiteRabbit;
 
 public class Client {
     public static void main(Window window) {
@@ -20,8 +21,8 @@ public class Client {
         Container container = new Container(BoxLayout.Y_AXIS);
         TextField ip = new TextField("Contact's IP:", "localhost", 15, window.getFont());
         TextField port = new TextField("Port to use:", "1234", 15, window.getFont());
-        Button connect = new Button("Connect", window.getFont());
-        Button cancel = new Button("Cancel", window.getFont());
+        Button connect = new Button("Connect", window.getFont().getName());
+        Button cancel = new Button("Cancel", window.getFont().getName());
         Container buttonContainer = new Container(BoxLayout.X_AXIS);
         buttonContainer.add(connect);
         buttonContainer.add(cancel);
@@ -41,7 +42,7 @@ public class Client {
             @Override
             public void actionPerformed(ActionEvent e) {
                 window.close();
-                WhiteRabbit.main();
+                WhiteRabbit.main(null);
             }
         });
         window.draw();

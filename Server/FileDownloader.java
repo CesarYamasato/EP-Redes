@@ -21,7 +21,7 @@ public class FileDownloader {
 
         Window preview = new Window("White Rabbit File Downloader", "File Downloader",
                 "Are you sure you want to download " + d.getName() + " in the current folder?",
-                window.getFont(), new Dimension(600, 600));
+                window.getFont().getName(), new Dimension(600, 600));
         Container container = new Container(BoxLayout.Y_AXIS);
         if (d.getType().equalsIgnoreCase("jpg")
                 || d.getType().equalsIgnoreCase("png")
@@ -30,8 +30,8 @@ public class FileDownloader {
             container.add(new Label(ImagePreview.fitImage(d.getData(), 400), SwingConstants.CENTER));
         }
         Container buttons = new Container(BoxLayout.X_AXIS);
-        Button yes = new Button("Yes", window.getFont());
-        Button no = new Button("No", window.getFont());
+        Button yes = new Button("Yes", window.getFont().getName());
+        Button no = new Button("No", window.getFont().getName());
         buttons.add(yes);
         buttons.add(no);
         preview.add(buttons);

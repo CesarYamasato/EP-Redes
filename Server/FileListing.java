@@ -27,7 +27,7 @@ public class FileListing {
     private static boolean alive;
     private static int fileID;
 
-    public static void main(Window window, ServerSocket ss) {
+    public static void main(Window window, ServerSocket ss) throws IOException {
         alive = true;
         fileID = 0;
         window.reset();
@@ -52,45 +52,41 @@ public class FileListing {
             ReceiveFiles(window, ss, scrollPane);
     }
 
-    private static void ReceiveFiles(Window window, ServerSocket ss, JScrollPane scrollPane) {
-        try {
-            // Receive files, if available.
-            DataInputStream input = new DataInputStream(ss.accept().getInputStream());
-            int fileNameLength = input.readInt();
+    private static void ReceiveFiles(Window window, ServerSocket ss, JScrollPane scrollPane) throws IOException {
+        // Receive files, if available.
+        DataInputStream input = new DataInputStream(ss.accept().getInputStream());
+        int fileNameLength = input.readInt();
 
-            // if files were received, list them.
-            if (fileNameLength > 0) {
-                window.setDescription("Choose a file to download");
-                byte[] fileNameBytes = new byte[fileNameLength];
-                input.readFully(fileNameBytes, 0, fileNameBytes.length);
-                String fileName = new String(fileNameBytes);
-                int fileContentLength = input.readInt();
-                byte[] fileContentBytes = new byte[fileContentLength];
+        // if files were received, list them.
+        if (fileNameLength > 0) {
+            window.setDescription("Choose a file to download");
+            byte[] fileNameBytes = new byte[fileNameLength];
+            input.readFully(fileNameBytes, 0, fileNameBytes.length);
+            String fileName = new String(fileNameBytes);
+            int fileContentLength = input.readInt();
+            byte[] fileContentBytes = new byte[fileContentLength];
 
-                if (fileContentLength > 0) {
-                    input.readFully(fileContentBytes, 0, fileContentLength);
-                    Container fileRow = new Container(BoxLayout.Y_AXIS);
-                    Label entry = new Label(fileName, SwingConstants.LEFT, window.getFont());
-                    fileRow.get().setName(String.valueOf(fileID));
-                    fileRow.get().addMouseListener(new MouseAdapter() {
-                        public void mouseClicked(MouseEvent e) {
-                            JPanel panel = (JPanel) e.getSource();
-                            int fileID = Integer.parseInt(panel.getName());
+            if (fileContentLength > 0) {
+                input.readFully(fileContentBytes, 0, fileContentLength);
+                Container fileRow = new Container(BoxLayout.Y_AXIS);
+                Label entry = new Label(fileName, SwingConstants.LEFT, window.getFont().getName());
+                fileRow.get().setName(String.valueOf(fileID));
+                fileRow.get().addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent e) {
+                        JPanel panel = (JPanel) e.getSource();
+                        int fileID = Integer.parseInt(panel.getName());
 
-                            for (FileDescriptor d : fileDescriptors) {
-                                if (d.getId() == fileID)
-                                    FileDownloader.main(window, d);
-                            }
+                        for (FileDescriptor d : fileDescriptors) {
+                            if (d.getId() == fileID)
+                                FileDownloader.main(window, d);
                         }
-                    });
-                    fileRow.add(entry);
-                    scrollPane.add(fileRow.get());
-                    window.get().revalidate();
-                }
-                fileDescriptors.add(new FileDescriptor(fileID, fileName, fileContentBytes, getExtension(fileName)));
+                    }
+                });
+                fileRow.add(entry);
+                scrollPane.add(fileRow.get());
+                window.get().revalidate();
             }
-        } catch (IOException exception) {
-            exception.printStackTrace();
+            fileDescriptors.add(new FileDescriptor(fileID, fileName, fileContentBytes, getExtension(fileName)));
         }
     }
 

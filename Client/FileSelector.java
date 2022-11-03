@@ -12,13 +12,15 @@ import Interface.Container;
 import Interface.Window;
 
 public class FileSelector {
+    private static File file;
+
     public static void main(Window window, String ip, String port) {
-        File file = null;
+        file = null;
         window.reset();
         window.setDescription("Select a file to send to " + ip + " at port " + port);
         Container buttonContainer = new Container(BoxLayout.Y_AXIS);
-        Button choose = new Button("Choose file", window.getFont());
-        Button cancel = new Button("Cancel", window.getFont());
+        Button choose = new Button("Choose file", window.getFont().getName());
+        Button cancel = new Button("Cancel", window.getFont().getName());
         buttonContainer.add(choose);
         buttonContainer.add(cancel);
         window.add(buttonContainer);

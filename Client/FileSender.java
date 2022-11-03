@@ -19,8 +19,8 @@ public class FileSender {
         window.reset();
         window.setDescription("Send " + file.getName() + "?");
         Container buttonContainer = new Container(BoxLayout.Y_AXIS);
-        Button send = new Button("Send", window.getFont());
-        Button cancel = new Button("Cancel", window.getFont());
+        Button send = new Button("Send", window.getFont().getName());
+        Button cancel = new Button("Cancel", window.getFont().getName());
         window.add(buttonContainer);
 
         send.get().addActionListener(new ActionListener() {
@@ -50,7 +50,7 @@ public class FileSender {
             // Take file length and its contents
             byte[] fileContents = new byte[(int) file.length()];
 
-            FileInputStream input = new FileInputStream(file);
+            FileInputStream input = new FileInputStream(file.getAbsolutePath());
             input.read(fileContents);
 
             // Create socket and data output stream

@@ -18,6 +18,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+import main.WhiteRabbit;
 
 public class Server {
     static ArrayList<FileDescriptor> fileDescriptors = new ArrayList<>();
@@ -26,9 +27,9 @@ public class Server {
         window.reset();
         window.setDescription("Select a port to await a connection");
         Container container = new Container(BoxLayout.Y_AXIS);
-        TextField port = new TextField("Port to use:", "1234", 15, window.getFont());
-        Button connect = new Button("Connect", window.getFont());
-        Button cancel = new Button("Cancel", window.getFont());
+        TextField port = new TextField("Port to use:", "1234", 15, window.getFont().getName());
+        Button connect = new Button("Connect", window.getFont().getName());
+        Button cancel = new Button("Cancel", window.getFont().getName());
         Container buttonContainer = new Container(BoxLayout.X_AXIS);
         buttonContainer.add(connect);
         buttonContainer.add(cancel);
@@ -38,7 +39,11 @@ public class Server {
         connect.get().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                FileListing.main(window, new ServerSocket(Integer.parseInt(port.getText())));
+                try {
+                    FileListing.main(window, new ServerSocket(Integer.parseInt(port.getText())));
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
             }
         });
 
@@ -46,7 +51,7 @@ public class Server {
             @Override
             public void actionPerformed(ActionEvent e) {
                 window.close();
-                WhiteRabbit.main();
+                WhiteRabbit.main(null);
             }
         });
         window.draw();
