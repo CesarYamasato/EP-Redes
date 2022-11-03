@@ -11,9 +11,8 @@ import javax.swing.BoxLayout;
 public class WhiteRabbit {
     public static void main(String[] args) {
         String title = "WhiteRabbit", font = "Sans";
-        Dimension minSize = new Dimension(400, 400);
         Window window = new Window(title, title, "An application to send or receive files over a TCP connection", font,
-                new Dimension(400, 400));
+                new Dimension(600, 600));
         window.add(Options(window));
         window.draw();
     }

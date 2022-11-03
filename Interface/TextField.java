@@ -13,26 +13,15 @@ public class TextField {
     private JLabel label;
     private JTextField field;
 
-    public TextField(String labelText, String defaultText, int inputLength, String font) {
-        JPanel panel = new JPanel();
-        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+    public TextField(String labelText, String defaultText, Font font) {
+        panel = new JPanel();
+        panel.setBorder(new EmptyBorder(10, 0, 10, 0));
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        JLabel label = new JLabel(labelText);
-        label.setFont(new Font(font, Font.PLAIN, 12));
-        label.setBorder(new EmptyBorder(0, 0, 0, 10));
-        JTextField field = new JTextField(defaultText, inputLength);
-        panel.add(label);
-        panel.add(field);
-    }
-
-    public TextField(String labelText, String defaultText, int inputLength, Font font) {
-        JPanel panel = new JPanel();
-        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        JLabel label = new JLabel(labelText);
+        label = new JLabel(labelText);
         label.setFont(font);
         label.setBorder(new EmptyBorder(0, 0, 0, 10));
-        JTextField field = new JTextField(defaultText, inputLength);
+        field = new JTextField(defaultText);
+        field.setFont(font);
         panel.add(label);
         panel.add(field);
     }

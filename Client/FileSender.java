@@ -22,6 +22,8 @@ public class FileSender {
         Container container = new Container(new Dimension(200, 100), 2, 1, 10);
         Button send = new Button("Send", window.getFont().getName());
         Button cancel = new Button("Cancel", window.getFont().getName());
+        container.add(send);
+        container.add(cancel);
         window.add(container);
 
         send.get().addActionListener(new ActionListener() {

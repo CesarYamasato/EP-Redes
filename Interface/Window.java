@@ -53,6 +53,8 @@ public class Window {
 
     public void reset() {
         window.remove(container.get());
+        window.revalidate();
+        window.repaint();
     }
 
     public void setDescription(String text) {
