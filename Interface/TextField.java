@@ -16,7 +16,7 @@ public class TextField {
     public TextField(String labelText, String defaultText, int inputLength, String font) {
         JPanel panel = new JPanel();
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        panel.setLayout(new BoxLayout(field, BoxLayout.X_AXIS));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         JLabel label = new JLabel(labelText);
         label.setFont(new Font(font, Font.PLAIN, 12));
         label.setBorder(new EmptyBorder(0, 0, 0, 10));
@@ -28,7 +28,7 @@ public class TextField {
     public TextField(String labelText, String defaultText, int inputLength, Font font) {
         JPanel panel = new JPanel();
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        panel.setLayout(new BoxLayout(field, BoxLayout.X_AXIS));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         JLabel label = new JLabel(labelText);
         label.setFont(font);
         label.setBorder(new EmptyBorder(0, 0, 0, 10));

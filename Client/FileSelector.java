@@ -18,7 +18,7 @@ public class FileSelector {
         file = null;
         window.reset();
         window.setDescription("Select a file to send to " + ip + " at port " + port);
-        Container buttonContainer = new Container(BoxLayout.Y_AXIS);
+        Container buttonContainer = new Container(new Dimension(200, 100), 2, 1, 10);
         Button choose = new Button("Choose file", window.getFont().getName());
         Button cancel = new Button("Cancel", window.getFont().getName());
         buttonContainer.add(choose);

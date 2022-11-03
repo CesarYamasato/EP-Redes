@@ -22,14 +22,14 @@ public class FileDownloader {
         Window preview = new Window("White Rabbit File Downloader", "File Downloader",
                 "Are you sure you want to download " + d.getName() + " in the current folder?",
                 window.getFont().getName(), new Dimension(600, 600));
-        Container container = new Container(BoxLayout.Y_AXIS);
+        Container container = new Container(new Dimension(400, 400), 1, 1, 10);
         if (d.getType().equalsIgnoreCase("jpg")
                 || d.getType().equalsIgnoreCase("png")
                 || d.getType().equalsIgnoreCase("gif")
                 || d.getType().equalsIgnoreCase("jpeg")) {
             container.add(new Label(ImagePreview.fitImage(d.getData(), 400), SwingConstants.CENTER));
         }
-        Container buttons = new Container(BoxLayout.X_AXIS);
+        Container buttons = new Container(new Dimension(200, 100), 2, 1, 10);
         Button yes = new Button("Yes", window.getFont().getName());
         Button no = new Button("No", window.getFont().getName());
         buttons.add(yes);

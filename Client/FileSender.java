@@ -1,5 +1,6 @@
 package Client;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.DataOutputStream;
@@ -18,10 +19,10 @@ public class FileSender {
     public static void main(Window window, File file, String ip, String port) {
         window.reset();
         window.setDescription("Send " + file.getName() + "?");
-        Container buttonContainer = new Container(BoxLayout.Y_AXIS);
+        Container container = new Container(new Dimension(200, 100), 2, 1, 10);
         Button send = new Button("Send", window.getFont().getName());
         Button cancel = new Button("Cancel", window.getFont().getName());
-        window.add(buttonContainer);
+        window.add(container);
 
         send.get().addActionListener(new ActionListener() {
             @Override
@@ -64,6 +65,7 @@ public class FileSender {
             // Send file length and its contents
             output.writeInt(fileContents.length);
             output.write(fileContents);
+            s.close();
         } catch (IOException exception) {
             exception.printStackTrace();
         }

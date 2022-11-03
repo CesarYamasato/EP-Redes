@@ -3,11 +3,13 @@ package Server;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,11 +34,12 @@ public class FileListing {
         fileID = 0;
         window.reset();
         window.setDescription("Waiting for a connection");
-        Container container = new Container(BoxLayout.Y_AXIS);
+        Container container = new Container(Component.CENTER_ALIGNMENT);
         JScrollPane scrollPane = new JScrollPane(container.get());
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        Button cancel = new Button("Cancel", window.getFont());
+        Button cancel = new Button("Cancel", window.getFont().getName());
         container.add(scrollPane);
+        container.add(Box.createVerticalStrut(10));
         container.add(cancel);
         window.draw();
 
@@ -68,8 +71,8 @@ public class FileListing {
 
             if (fileContentLength > 0) {
                 input.readFully(fileContentBytes, 0, fileContentLength);
-                Container fileRow = new Container(BoxLayout.Y_AXIS);
-                Label entry = new Label(fileName, SwingConstants.LEFT, window.getFont().getName());
+                Container fileRow = new Container(Component.LEFT_ALIGNMENT);
+                Label entry = new Label(fileName, SwingConstants.LEFT, window.getFont);
                 fileRow.get().setName(String.valueOf(fileID));
                 fileRow.get().addMouseListener(new MouseAdapter() {
                     public void mouseClicked(MouseEvent e) {
