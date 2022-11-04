@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+// Caixa de texto por meio da qual o usuário descreve informações necessárias a se efetivar a conexão.
+
 public class TextField {
     private JPanel panel;
     private JLabel label;

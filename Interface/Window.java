@@ -10,6 +10,8 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
+// Classe que descreve as janelas da aplicação. Esta descreve três elementos nela contidos: o título, uma descrição da janela (ou do que ocorre, o que fazer, etc.) e um container. Esse conteiner hospeda a todos os demais elementos gráficos apresentados e, entre as janelas (cada qual uma classe) é substituído (por intermédio dos métodos "reset" e "add") por outro com novos elementos.
+
 public class Window {
 
     private JFrame window;

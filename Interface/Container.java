@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+// O container é o elemento gráfico que incorpora a demais elementos gráficos dentro de uma janela. Por si só este é vazio e transparente, razão pela qual este descreve uma margem por meio da função "EmptyBorder" que serve de separação entre os elementos. O container pode ser criado de duas formas: a primeira é empilhando verticalmente os elementos que este contém, a segunda é criando um grid que pode ser tanto vertical ou horizontal.
+
 public class Container {
     JPanel container = new JPanel();
 

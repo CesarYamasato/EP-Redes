@@ -8,6 +8,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.ImageIcon;
 
+// Função que descreve uma caixa de texto ou imagem, assim como o alinhamento e fonte (sendo o caso) destes nele contidos.
+
 public class Label {
     private JLabel label;
 

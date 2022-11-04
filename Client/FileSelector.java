@@ -13,10 +13,11 @@ import Interface.Container;
 import Interface.Window;
 
 public class FileSelector {
-    private static File file;
+    private static File file = null;
 
     public static void main(Window window, String ip, String port) {
-        file = null;
+
+        // Desenho da tela
         window.reset();
         window.setDescription("Select a file to send to " + ip + " at port " + port);
         Container buttonContainer = new Container(new Dimension(200, 100), 2, 1, 10);
@@ -26,6 +27,7 @@ public class FileSelector {
         buttonContainer.add(cancel);
         window.add(buttonContainer);
 
+        // Ações disparadas ao se pressionar os botões
         choose.get().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -44,6 +46,7 @@ public class FileSelector {
         window.draw();
     }
 
+    // Método privado que dispara a tela para seleção do arquivo
     private static File selectFile(Window window) {
         JFileChooser menu = new JFileChooser();
         menu.setDialogTitle("Choose a file to send");

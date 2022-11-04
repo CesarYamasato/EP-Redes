@@ -14,11 +14,15 @@ import javax.swing.JFileChooser;
 import Interface.*;
 import main.WhiteRabbit;
 
+// Janela inicial quando se opta por enviar arquivos. Aqui se descreve informações para contato.
+
 public class Client {
     public static void main(Window window) {
+
+        // Desenho da tela
+
         window.reset();
         window.setDescription("Provide an address to connect to");
-
         Container container = new Container(new Dimension(300, 190), 3, 1, 5);
         TextField ip = new TextField("Contact's IP:", "localhost", window.getFont());
         TextField port = new TextField("Port to use:", "1234", window.getFont());
@@ -31,6 +35,8 @@ public class Client {
         buttonContainer.add(cancel);
         container.add(buttonContainer);
         window.add(container);
+
+        // Ações disparadas pelo pressionamento dos botões
 
         connect.get().addActionListener(new ActionListener() {
             @Override

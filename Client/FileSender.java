@@ -15,8 +15,11 @@ import Interface.Button;
 import Interface.Container;
 import Interface.Window;
 
+// Tela onde ocorre a confirmação do envio
 public class FileSender {
     public static void main(Window window, File file, String ip, String port) {
+
+        // Desenho da tela
         window.reset();
         window.setDescription("Send " + file.getName() + "?");
         Container container = new Container(new Dimension(200, 100), 2, 1, 10);
@@ -26,6 +29,7 @@ public class FileSender {
         container.add(cancel);
         window.add(container);
 
+        // Ações disparadas pelo pressionamento dos botões
         send.get().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -44,27 +48,27 @@ public class FileSender {
         window.draw();
     }
 
+    // Método privado para realizar o envio do arquivo
     private static void sendFile(File file, String ip, String port) {
         try {
-            // Take file name and its length
+            // Tome o nome do arquivo e seu comprimento
             String fileName = file.getName();
             byte[] fileBytes = fileName.getBytes();
 
-            // Take file length and its contents
+            // Tome o comprimento do arquivo e e crie um array de bytes do conteúdo deste
             byte[] fileContents = new byte[(int) file.length()];
-
             FileInputStream input = new FileInputStream(file.getAbsolutePath());
             input.read(fileContents);
 
-            // Create socket and data output stream
+            // Crie um socket e o stream para o envio dos dados
             Socket s = new Socket(ip, Integer.parseInt(port));
             DataOutputStream output = new DataOutputStream(s.getOutputStream());
 
-            // Send file name and its length
+            // Envie o nome do arquivo e seu comprimento
             output.writeInt(fileBytes.length);
             output.write(fileBytes);
 
-            // Send file length and its contents
+            // Envie o conteúdo e feche o socket e streams
             output.writeInt(fileContents.length);
             output.write(fileContents);
             input.close();
