@@ -38,7 +38,7 @@ public class Client extends SocketApplication{
 		private void printDirectory() throws IOException {
 			
 			if(otherDirectory != null) {
-				System.out.println("(outdated by " + count + " downloads) List of files and directories that can be sent:");
+				System.out.println("List of files and directories that can be sent:");
 				for (int i=0; i < otherDirectory.length;i++) {
 					if(otherDirectory[i].getFolder()) System.out.println(i + ":" +  otherDirectory[i].getList() + "  Folder");
 					else System.out.println(i + ":" + otherDirectory[i].getList() + "  File");
