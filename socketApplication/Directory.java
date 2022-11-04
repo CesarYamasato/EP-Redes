@@ -1,4 +1,4 @@
-package SocketApplication;
+package socketApplication;
 
 public class Directory{
 	private String directory;

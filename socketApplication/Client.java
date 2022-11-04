@@ -1,4 +1,4 @@
-package SocketApplication;
+package socketApplication;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -51,12 +51,8 @@ public class Client extends SocketApplication{
 		
 		//Receives all files that are on the in
 		private void receiveFiles() throws IOException{
-			count = in.readInt();
 			FileReceiver fileReceiver = new FileReceiver(clientSocket);
-			for(int i = 0; i < count; i++) {
-				fileReceiver.receiveFile();
-			}
-			count = 0;
+			fileReceiver.receiveFile();
 		}
 		
 		//Selects a file to be downloaded from the server Peer

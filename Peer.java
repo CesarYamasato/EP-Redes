@@ -1,7 +1,7 @@
 import java.io.*;
 import java.net.*;
 
-import SocketApplication.*;
+import socketApplication.*;
 
 public class Peer extends Thread{
 	

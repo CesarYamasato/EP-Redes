@@ -1,4 +1,4 @@
-package SocketApplication;
+package socketApplication;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,10 +47,11 @@ public class Server extends SocketApplication{
 			int request = in.readInt();
 			FileSender fileSender = new FileSender(clientSocket);
 			File file = new File(myPath + "/" + myDirectory[request].getList());
-			count = countFiles(file);
+			//count = countFiles(file);
 			//System.out.println(count);
-			out.writeInt(count);
-			fileSender.sendFile(file);
+			//out.writeInt(count);
+			if(file.isDirectory()) fileSender.sendFolder(file);
+			else fileSender.sendFile(file);
 			//out.writeChar('f');
 		}
 		

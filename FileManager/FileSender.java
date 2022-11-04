@@ -29,17 +29,21 @@ public class FileSender {
         }
     }
 
+    private void sendFileName(File file) throws IOException{
+    	byte[] fileName = file.getName().getBytes();
+        out.writeInt(fileName.length);
+        System.out.println(fileName.length);
+        out.write(fileName);
+        System.out.println(file.getName());
+    }
+    
     // Sends a file to the socket specified upen creation of the FileSender
     public void sendFile(File file) throws IOException {
-        if (file.isDirectory()) {
-            sendFolder(file);
-            return;
-        }
+    	out.writeChar('F');
+    	System.out.println('F');
         FileInputStream fileIn = new FileInputStream(file.getAbsolutePath());
 
-        byte[] fileName = file.getName().getBytes();
-        out.writeInt(fileName.length);
-        out.write(fileName);
+        sendFileName(file);
 
         byte[] fileContents = new byte[(int) file.length()];
 
@@ -50,17 +54,40 @@ public class FileSender {
         fileIn.close();
     }
 
+    //Used to send a file with non-default flags
+    private void sendFile(File file, char flag) throws IOException {
+    	out.writeChar(flag);
+    	System.out.println(flag);
+    	sendFileName(file);
+    	if(file.isDirectory()) {
+    		out.writeInt(0);
+    		return;
+    	}
+        FileInputStream fileIn = new FileInputStream(file.getAbsolutePath());
+        byte[] fileContents = new byte[(int) file.length()];
+
+        fileIn.read(fileContents);
+        out.writeInt(fileContents.length);
+        out.write(fileContents);
+
+        fileIn.close();
+    }
+    
     // Sends a folder to the socket specified upon creation of the FileSender
-    private void sendFolder(File file) throws IOException {
-        int count = 0;
+    public void sendFolder(File file) throws IOException {
+    	out.writeChar('D');
+    	System.out.println('D');
+    	sendFileName(file);
         String[] directory = file.list();
         for (int i = 0; i < directory.length; i++) {
             File fileToSend = new File(file.getAbsolutePath() + "/" + directory[i]);
-            if (fileToSend.isDirectory())
-                sendFolder(fileToSend);
-            else
-                sendFile(fileToSend);
+            if (fileToSend.isDirectory()) 
+            	sendFolder(fileToSend);
+            else 
+            	 sendFile(fileToSend, 'N');     
         }
+        out.writeChar('E');
+        System.out.println('E');
     }
 
     // Closes the OutputStream created with the FileSender
