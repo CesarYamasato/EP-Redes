@@ -71,8 +71,8 @@ public class Client extends SocketApplication{
 		}
 		
 		//Sends handshake
-		public void sendAwake() throws IOException {
-			out.write(0);
+		public void sendAwake(int port) throws IOException {
+			out.write(port);
 		}
 		
 		//Sends a request to the other peer
@@ -101,6 +101,8 @@ public class Client extends SocketApplication{
 				case 3:
 					selectFolder();
 					break;
+				default:
+					System.out.println("Invalid Option");
 				}
 			}
 		}

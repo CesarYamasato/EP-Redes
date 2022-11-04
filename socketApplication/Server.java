@@ -80,9 +80,9 @@ public class Server extends SocketApplication{
 		}
 		
 		//Waits for handshake
-		public void waitAwake() throws IOException {
+		public int waitAwake() throws IOException {
 			while(in.available() == 0);
-			in.read();
+			return in.readInt();
 		}
 		
 		public void receiveRequest() throws IOException {
@@ -97,7 +97,7 @@ public class Server extends SocketApplication{
 				break;
 			case 3:
 				navigate();
-				break;
+				break;		
 			}
 		}
 		
