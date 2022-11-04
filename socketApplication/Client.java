@@ -72,7 +72,7 @@ public class Client extends SocketApplication{
 		
 		//Sends handshake
 		public void sendAwake(int port) throws IOException {
-			out.write(port);
+			out.writeInt(port);
 		}
 		
 		//Sends a request to the other peer

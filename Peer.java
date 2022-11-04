@@ -32,6 +32,13 @@ public class Peer extends Thread {
     public String getAddress() {
     	return clientAddress;
     }
+    public int getPort() {
+    	return port;
+    }
+    
+    public void print() {
+    	System.out.println(port + clientAddress);
+    }
     
     public void run() {
         try {
@@ -62,7 +69,9 @@ public class Peer extends Thread {
         Peer peer = new Peer();
         if (args[0].equals("-s")) {
             peer.createServer(Integer.parseInt(args[1]));
-            peer.connect(peer.getAddress(),peer.waitAwake());
+            peer.waitAwake();
+            peer.print();
+            peer.connect(peer.getAddress(),peer.getPort());
         } else if (args[0].equals("-c")) {
             peer.connect(args[2], Integer.parseInt(args[3]));
             peer.sendAwake(Integer.parseInt(args[1]));
