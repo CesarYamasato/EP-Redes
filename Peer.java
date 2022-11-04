@@ -17,7 +17,8 @@ public class Peer extends Thread {
         ServerSocket serverSocket = new ServerSocket(port);
         Socket clientSocket = serverSocket.accept();
         server = new Server(clientSocket);
-        clientAddress = serverSocket.getInetAddress().getHostAddress();
+        clientAddress = clientSocket.getInetAddress().toString();
+        clientAddress = clientAddress.substring(1);
         serverSocket.close();
     }
 
@@ -34,10 +35,6 @@ public class Peer extends Thread {
     }
     public int getPort() {
     	return port;
-    }
-    
-    public void print() {
-    	System.out.println(port + clientAddress);
     }
     
     public void run() {
@@ -70,7 +67,6 @@ public class Peer extends Thread {
         if (args[0].equals("-s")) {
             peer.createServer(Integer.parseInt(args[1]));
             peer.waitAwake();
-            peer.print();
             peer.connect(peer.getAddress(),peer.getPort());
         } else if (args[0].equals("-c")) {
             peer.connect(args[2], Integer.parseInt(args[3]));
