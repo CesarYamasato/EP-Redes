@@ -13,6 +13,7 @@ public class Button {
     public Button(String label, String font) {
         button = new JButton(label);
         button.setFont(new Font(font, Font.PLAIN, 24));
+        button.setPreferredSize(new Dimension(200, 65));
     }
 
     public JButton get() {

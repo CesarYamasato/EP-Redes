@@ -26,14 +26,15 @@ public class Server {
     public static void main(Window window) {
         window.reset();
         window.setDescription("Select a port to await a connection");
-        Container container = new Container(BoxLayout.Y_AXIS);
-        TextField port = new TextField("Port to use:", "1234", 15, window.getFont().getName());
+        Container container = new Container(new Dimension(300, 155), 2, 1, 5);
+        TextField port = new TextField("Port to use:", "1234", window.getFont());
+        container.add(port);
+        Container buttonContainer = new Container(new Dimension(300, 75), 1, 2, 10);
         Button connect = new Button("Connect", window.getFont().getName());
         Button cancel = new Button("Cancel", window.getFont().getName());
-        Container buttonContainer = new Container(BoxLayout.X_AXIS);
         buttonContainer.add(connect);
         buttonContainer.add(cancel);
-        container.add(port);
+        container.add(buttonContainer);
         window.add(container);
 
         connect.get().addActionListener(new ActionListener() {
@@ -42,6 +43,7 @@ public class Server {
                 try {
                     FileListing.main(window, new ServerSocket(Integer.parseInt(port.getText())));
                 } catch (Exception exception) {
+                    window.setDescription("Server socket already in use, choose another port.");
                     exception.printStackTrace();
                 }
             }

@@ -67,6 +67,8 @@ public class FileSender {
             // Send file length and its contents
             output.writeInt(fileContents.length);
             output.write(fileContents);
+            input.close();
+            output.close();
             s.close();
         } catch (IOException exception) {
             exception.printStackTrace();
