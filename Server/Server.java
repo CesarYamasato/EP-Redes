@@ -24,6 +24,8 @@ public class Server {
     static ArrayList<FileDescriptor> fileDescriptors = new ArrayList<>();
 
     public static void main(Window window) {
+
+        // Desenhar a tela
         window.reset();
         window.setDescription("Select a port to await a connection");
         Container container = new Container(new Dimension(300, 155), 2, 1, 5);
@@ -37,6 +39,7 @@ public class Server {
         container.add(buttonContainer);
         window.add(container);
 
+        // Ações disparadas pelo pressionamento dos botões
         connect.get().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
