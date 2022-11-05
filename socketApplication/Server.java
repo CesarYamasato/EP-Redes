@@ -31,12 +31,16 @@ public class Server extends SocketApplication{
 			
 			out.writeInt(myDirectory[0].getList().length());
 			out.writeBoolean(true);
+			System.out.println("Folder");
 			out.writeBytes(myDirectory[0].getList());
 			
 		      for(int i=1; i<myDirectory.length; i++) {
 		    	  out.writeInt(contents[i-1].length());
-		    	  isFolder = new File(contents[i-1]).isDirectory();
+		    	  isFolder = new File(myPath + "/" + contents[i-1]).isDirectory();
+		    	  System.out.print(contents[i-1] + ": ");
 		    	  out.writeBoolean(isFolder);
+		    	  if(isFolder) System.out.println("Folder");
+		    	  else System.out.println("File");
 		    	  out.writeBytes(contents[i-1]);
 		    	  myDirectory[i] = new Directory(contents[i-1],isFolder);
 		      }
@@ -54,29 +58,18 @@ public class Server extends SocketApplication{
 			else fileSender.sendFile(file);
 			//out.writeChar('f');
 		}
-		
-		private int countFiles(File file) {
-			int count = 0;
-			if(file.isDirectory()) {
-				String[] directory = file.list();
-				for (int i = 0; i < directory.length; i ++) {
-					File fileToTest = new File(file.getAbsolutePath() + "/" + directory[i]);
-					if(fileToTest.isDirectory()) count += countFiles(fileToTest);
-					else count++;
-				}
-				return count;
-			}
-			return 1;
-		}
 
 		//Navigates to a folder on the server peer
 		private void navigate() throws IOException {
 			int requestFolder = in.readInt();
-			myPath +=  "/"+ myDirectory[requestFolder].getList();
-			String[] directory = new File(myPath).list();
-			myDirectory = new Directory[directory.length+1];
-			for(int i = 1; i < myDirectory.length; i++) myDirectory[i]= new Directory(directory[i-1], new File(directory[i-1]).isDirectory());
-		
+			if(requestFolder < myDirectory.length && requestFolder >= 0) {
+				myPath +=  "/"+ myDirectory[requestFolder].getList();
+				System.out.println(myPath);
+				String[] directory = new File(myPath).list();
+				myDirectory = new Directory[directory.length+1];
+				myDirectory[0] = new Directory("..",true);
+				for(int i = 1; i < myDirectory.length; i++) myDirectory[i]= new Directory(directory[i-1], new File(directory[i-1]).isDirectory());
+			}
 		}
 		
 		//Waits for handshake
