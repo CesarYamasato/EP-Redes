@@ -1,3 +1,4 @@
+
 import java.io.*;
 import java.net.*;
 
@@ -39,8 +40,9 @@ public class Peer extends Thread {
     
     public void run() {
         try {
-            while (true)
-                receiveRequest();
+            while (true && !this.isClosed()) receiveRequest();
+            this.close();
+            Thread.yield();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -52,16 +54,28 @@ public class Peer extends Thread {
     public void connect(String IP, int port) throws UnknownHostException, IOException {
         Socket clientSocket = new Socket(IP, port);
         client = new Client(clientSocket);
+        clientAddress = IP;
+        this.port = port;
     }
 
     public void sendRequest() throws IOException {
-        client.sendRequest();
+        if(!this.isClosed())client.sendRequest();
+        else client.close();
     }
 
     public void sendAwake(int port) throws IOException {
         client.sendAwake(port);
     }
 
+    public boolean isClosed() {
+    	return server.isClosed() || client.isClosed() ? true : false;
+    }
+    
+    public void close() {
+    	if(!server.isClosed()) server.close();
+    	if(!client.isClosed()) client.close();
+    	System.exit(0);
+    }
     public static void main(String[] args) throws IOException {
         Peer peer = new Peer();
         if (args[0].equals("-s")) {
@@ -74,7 +88,8 @@ public class Peer extends Thread {
             peer.createServer(Integer.parseInt(args[1]));
         }
         peer.start();
-        while (true)
-            peer.sendRequest();
+        while (true && !peer.isClosed()) peer.sendRequest();
+        peer.close();
+        
     }
 }

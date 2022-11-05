@@ -40,7 +40,7 @@ public class FileReceiver{
 	
 	private void receiveFolder() throws IOException {
 		char flag = in.readChar();
-		System.out.println(flag);
+		//System.out.println(flag);
 		if(flag == 'E') {
 			myPath = myPath + "../";
 			return;
@@ -58,7 +58,7 @@ public class FileReceiver{
 	private void receiveFile(char flag) throws IOException {
 		//System.out.println(flag);
 		String fileName = receiveFileName();
-		System.out.println(fileName);
+		//System.out.println(fileName);
 
 		new File (myPath + fileName).createNewFile();
 		FileOutputStream fileOut = new FileOutputStream(myPath + fileName);
@@ -75,13 +75,12 @@ public class FileReceiver{
 	//Sends a file to the socket specified upen creation of the FileSender
 	public void receiveFile() throws IOException {
 		char flag = in.readChar();
-		System.out.println(flag);
+		//System.out.println(flag);
 		if(flag == 'E') {
-			myPath = myPath + "../";
 			return;
 		}
 		String fileName = receiveFileName();
-		System.out.println(fileName);
+		//System.out.println(fileName);
 		if(flag == 'D') {
 			myPath = myPath + "/" + fileName + "/";
 			new File(myPath).mkdirs();

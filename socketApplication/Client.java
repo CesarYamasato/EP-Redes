@@ -8,9 +8,9 @@ import FileManager.FileReceiver;
 
 public class Client extends SocketApplication{
 	private Directory[] otherDirectory;
-	private int count;
+	private String otherPath;
 	
-	//Connects to another peer's serverSocket
+		//Connects to another peer's serverSocket
 		public Client(Socket clientSocket) throws UnknownHostException, IOException{
 				super(clientSocket);
 				receiveListDirectory();
@@ -36,7 +36,6 @@ public class Client extends SocketApplication{
 		
 		//Prints the directory of the other Peer
 		private void printDirectory() throws IOException {
-			
 			if(otherDirectory != null) {
 				System.out.println("List of files and directories that can be sent:");
 				for (int i=0; i < otherDirectory.length;i++) {
@@ -53,6 +52,7 @@ public class Client extends SocketApplication{
 		private void receiveFiles() throws IOException{
 			FileReceiver fileReceiver = new FileReceiver(clientSocket);
 			fileReceiver.receiveFile();
+			fileReceiver.close();
 		}
 		
 		//Selects a file to be downloaded from the server Peer
@@ -60,7 +60,6 @@ public class Client extends SocketApplication{
 			printDirectory();
 			int requestFile = systemIn.nextInt();
 			out.writeInt(requestFile);
-			//count++;
 		}
 		
 		//Selects a folder to navigate to on the server peer
@@ -68,8 +67,11 @@ public class Client extends SocketApplication{
 			printDirectory();
 			int requestFolder = systemIn.nextInt();
 			out.writeInt(requestFolder);
+			if(!in.readBoolean()) System.out.println("Access not permitted." + System.lineSeparator());
 		}
 		
+//============================================== Public Side =========================================================//
+
 		//Sends handshake
 		public void sendAwake(int port) throws IOException {
 			out.writeInt(port);
@@ -82,6 +84,7 @@ public class Client extends SocketApplication{
 					"// 1: Update directory list            //"+ System.lineSeparator() +
 					"// 2: Select a file/folder to download //"+ System.lineSeparator() +
 					"// 3: Navigate to folder               //"+ System.lineSeparator() +
+					"// 4: End connection                   //"+ System.lineSeparator() +
 					"/////////////////////////////////////////"
 					);
 			int request = systemIn.nextInt();
@@ -100,9 +103,13 @@ public class Client extends SocketApplication{
 					break;
 				case 3:
 					selectFolder();
+					receiveListDirectory();
+					break;
+				case 4:
+					this.close();
 					break;
 				default:
-					System.out.println("Invalid Option");
+					System.out.println("Invalid Option.");
 				}
 			}
 		}
