@@ -59,9 +59,10 @@ public class Server extends SocketApplication{
 		private void navigate() throws IOException {
 			int requestFolder = in.readInt();
 			if(requestFolder < myDirectory.length && requestFolder >= 0) {
-				String tempPath = new File(myPath + "/" + myDirectory[requestFolder].getList()).getCanonicalPath();
+				File tempFile = new File(myPath + "/" + myDirectory[requestFolder].getList());
+				String tempPath = tempFile.getCanonicalPath();
 				String limitPath = new File(System.getProperty("user.dir")).getAbsolutePath();
-				if(tempPath.contains(limitPath)) {
+				if(tempPath.contains(limitPath) && tempFile.isDirectory()) {
 					myPath = tempPath;
 					String[] directory = new File(myPath).list();
 					myDirectory = new Directory[directory.length+1];
