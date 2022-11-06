@@ -1,6 +1,8 @@
 # White Rabbit
 
-Uma aplicação para o envio e recebimento remoto de arquivos e pastas.
+![](Imagens/2022-11-06-16-59-54-image.png)
+
+Uma aplicação de linha de comando para o envio e recebimento remoto de arquivos e pastas via TCP.
 
 > **Autores:**
 > 
@@ -28,7 +30,7 @@ Instruções de uso são exibidas chamando a aplicação sem o uso de argumentos
 
 > Fosse esse comando utilizado diretamente na pasta `Ep-Redes`, bastaria `java main.Peer`.
 
-É possível participar em uma conexão entre dois peers iniciando-a ‒ com a flag `-c`, para "client" ‒ ou aguardando-a ‒ com a flag `-w`, para "wait". Na eventualidade de o endereço do outro peer ser desconhecida, a flag `-s` pode se combinada para buscar (`-cs`),  ou disponibilizar (`-ws`), um endereço de IP para conexão. Ao conectarem-se os dois computadores podem trocar arquivos e navegar em pastas conforme fornecem alguma das instruções fornecidas.
+É possível participar em uma conexão entre dois peers iniciando-a ‒ com a flag `-c`, para "client" ‒ ou aguardando-a ‒ com a flag `-w`, para "wait". Ao conectarem-se, ambos os computadores podem trocar arquivos e navegar em pastas conforme instruções fornecidas.
 
 ## Protocolo de comunicação
 
@@ -48,13 +50,15 @@ O servidor então responde (pelo método `sendListDirectory()`) enviando:
   
   - O tamanho da `String`, contendo  seu nome;
   
+  - a `String` contendo o nome;
+  
   - Um `boolean` indicando se este é um arquivo ou pasta.
 
 Esta sequência é percorrida pelo cliente no método `receiveListDirectory()` e descrita na tela.
 
 **2. Envio de arquivo ou pasta**
 
-O cliente envia o índice do arquivo ou pasta, o servidor avalia se o índice é válido (está dentro do tamanho da lista enviada) ou, senão, envia imediatamente uma flag `E` (end of file).
+O cliente envia o índice do arquivo ou pasta, o servidor avalia se o índice é válido (está dentro do tamanho da lista enviada) ou, senão, envia imediatamente uma flag `E` (*end of file*).
 
 Ao ter selecionado um arquivo, o servidor o envia a flag `F`, indicando que reconheceu o pedido para download de arquivo. Em seguida este envia, respectivamente, o tamanho do nome do arquivo, o nome do arquivo, o tamanho do arquivo, e um array de bytes que constitui seu conteúdo. Com estas informações o cliente salva o arquivo localmente.
 
