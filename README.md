@@ -30,7 +30,7 @@ Instruções de uso são exibidas chamando a aplicação sem o uso de argumentos
 
 > Fosse esse comando utilizado diretamente na pasta `Ep-Redes`, bastaria `java main.Peer`.
 
-É possível participar em uma conexão entre dois peers iniciando-a ‒ com a flag `-c`, para "client" ‒ ou aguardando-a ‒ com a flag `-w`, para "wait". Ao conectarem-se, ambos os computadores podem trocar arquivos e navegar em pastas conforme instruções fornecidas.
+É possível participar em uma conexão entre dois peers iniciando-a ‒ com a flag `-c`, para "client" ‒ ou aguardando-a ‒ com a flag `-w`, para "wait". Ao conectarem-se, ambos os computadores podem trocar arquivos e navegar em pastas conforme instruções fornecidas, já que executam instâncias concorrentes de cliente e servidor.
 
 ## Protocolo de comunicação
 
