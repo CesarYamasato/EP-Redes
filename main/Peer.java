@@ -81,8 +81,7 @@ public class Peer extends Thread {
     	System.out.println( "Usage:" + System.lineSeparator() +
     						"Available options:" + System.lineSeparator() +
     						"-w [port] -> Creates a server socket on the specified port"+ System.lineSeparator() +
-    						"-c [port] [address] [port to connect] -> Connects to the specified socket on the specified address and creates a server socket on the specified port" + System.lineSeparator() +
-    						"-s [-flag] [port] [nickname] [address] -> Creates a server socket on the specified port and connects to an intermediate server specified by address to connect to other peer ");
+    						"-c [port] [address] [port to connect] -> Connects to the specified socket on the specified address and creates a server socket on the specified port");
     }
     
     public static void main(String[] args) throws IOException {
@@ -96,14 +95,6 @@ public class Peer extends Thread {
                 peer.connect(args[2], Integer.parseInt(args[3]));
                 peer.sendAwake(Integer.parseInt(args[1]));
                 peer.createServer(Integer.parseInt(args[1]));
-            }else if(args[0].equals("-s") && args.length == 5){
-            	if(args[1].equals("-w")) {
-            		
-            	}
-            	else if(args[1].equals("-c")) {
-            		
-            	}
-            	
             }
             else {
             	printHelp();

@@ -50,7 +50,7 @@ public class Server extends SocketApplication{
 			if(request < myDirectory.length && request >= 0) {
 				FileSender fileSender = new FileSender(clientSocket);
 				File file = new File(myPath + "/" + myDirectory[request].getList());
-				System.out.println(myPath + "/" + myDirectory[request].getList());
+				//System.out.println(myPath + "/" + myDirectory[request].getList());
 				if(file.isDirectory()) {
 					System.out.println("folder");
 					fileSender.sendFolder(file);
@@ -58,7 +58,7 @@ public class Server extends SocketApplication{
 				else fileSender.sendFile(file);
 			}
 			else {
-				System.out.println("OIIII");
+				//System.out.println("OIIII");
 				out.writeChar('E');
 			}
 		}
@@ -97,7 +97,7 @@ public class Server extends SocketApplication{
 		
 		public void receiveRequest() throws IOException{
 				int request = in.readInt();
-				System.out.println(request);
+				//System.out.println(request);
 				out.writeInt(9999);
 				switch (request) {
 				case 1:
