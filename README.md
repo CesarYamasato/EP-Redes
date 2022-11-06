@@ -4,9 +4,9 @@ Uma aplicação para o envio e recebimento remoto de arquivos e pastas.
 
 > **Autores:**
 > 
-> César Billalta Yamasato, número USP 1254299;
+> [César Billalta Yamasato](https://github.com/CesarYamasato), número USP 1254299;
 > 
-> Guilherme de Abreu Barreto, número USP 12543033.
+> [Guilherme de Abreu Barreto](https://github.com/de-abreu), número USP 12543033.
 
 ## Instruções para compilação
 
@@ -23,10 +23,10 @@ javac **.java
 Instruções de uso são exibidas chamando a aplicação sem o uso de argumentos:
 
 ```shell
-> java path.to.Peer
+> java -cp path/to/Ep-Redes main.Peer
 ```
 
-> Sendo `path.to.Peer` o caminho para o arquivo `Peer.class`, descontada a extensão do arquivo. Fosse esse comando utilizado diretamente na pasta `Ep-Redes`, esse caminho seria `main.Peer`.
+> Fosse esse comando utilizado diretamente na pasta `Ep-Redes`, bastaria `java main.Peer`.
 
 É possível participar em uma conexão entre dois peers iniciando-a ‒ com a flag `-c`, para "client" ‒ ou aguardando-a ‒ com a flag `-w`, para "wait". Na eventualidade de o endereço do outro peer ser desconhecida, a flag `-s` pode se combinada para buscar (`-cs`),  ou disponibilizar (`-ws`), um endereço de IP para conexão. Ao conectarem-se os dois computadores podem trocar arquivos e navegar em pastas conforme fornecem alguma das instruções fornecidas.
 
@@ -54,11 +54,15 @@ Esta sequência é percorrida pelo cliente no método `receiveListDirectory()` e
 
 **2. Envio de arquivo ou pasta**
 
-O cliente envia o índice do arquivo ou pasta na lista recebida a ser enviada o servidor então responde enviando uma...
+O cliente envia o índice do arquivo ou pasta, o servidor avalia se o índice é válido (está dentro do tamanho da lista enviada) ou, senão, envia imediatamente uma flag `E` (end of file).
+
+Ao ter selecionado um arquivo, o servidor o envia a flag `F`, indicando que reconheceu o pedido para download de arquivo. Em seguida este envia, respectivamente, o tamanho do nome do arquivo, o nome do arquivo, o tamanho do arquivo, e um array de bytes que constitui seu conteúdo. Com estas informações o cliente salva o arquivo localmente.
+
+Ao ter selecionada uma pasta, o servidor envia a flag `D` seguida do tamanho do nome da pasta e o nome da pasta, que o Cliente recebe e realiza a criação da respectiva pasta e a adentra. Em seguida o servidor envia um a um os arquivos e pastas contidos nesta. O envio de arquivos se dá de maneira semelhante ao anteriormente descrito, mas ocorre com a flag `N`, que indica haver um arquivo em sequência a ser enviado. Diretórios são acompanhados da flag `D` e são recursivamente explorados. Quando não há mais arquivos ou pastas no diretório, o servidor envia a flag `E`, e ambos o Cliente e o Servidor sobem um nível na hierarquia de pastas.
 
 **3. Navegar a outra pasta**
 
-...
+O cliente envia o índice da pasta que deseja acessar, o servidor avalia se o índice em questão é válido (está dentro do tamanho da lista enviada e aponta para um pasta), senão, este não altera seu estado. No caso do índice ser válido este altera sua pasta atual e novamente realiza a requisição 1.
 
 **4. Encerrar a conexão**
 
@@ -68,15 +72,15 @@ Fecham-se os `Sockets` e `Streams`, a opção 4 é enviada ao servidor. Este exi
 
 ### Conexão
 
-Relatar em rede local e rede remota, em conexão inicial e subsequente.
+O teste da conexão foi feita de duas formas, utilizando-se dois computadores distintos na mesma rede e entre um mesmo computador utilizando-se do endereço `localhost` de maneria a evitar ter de manipular configurações de *port fowarding*. Necessariamente o servidor necessita ser iniciado antes do cliente, ou senão a conexão é recusada pelo port não se encontrar disponível. Respeitadas estas condições a conexão é estabelecida normalmente e a interrupção da conexão por meio da respectiva requisição pode ser feita por qualquer um dos pares. **Entretanto**, por razões que não puderam ser estabelecidas, isso não leva o término imediato do programa do programa da outra parte, tal qual era pretendido: o usuário necessita apertar ENTER para encerrá-lo.
 
 ### Download de arquivos
 
-Relatar para arquivos individuais e pastas inteiras
+O download de arquivos e pastas se dá conforme o esperado **senão** nalguns casos limites como, por exemplo, havendo na pasta atual um link simbólico para a pasta que o contém. Nessas condições o download se dá de forma recursiva, descendendo até chegar em um limite de recursões.
 
 ### Navegação de diretórios
 
-Relatar navegação a diretórios filhos e pais. 
+A navegação de diretórios ocorre como esperado. O programa testa se o endereço que o cliente busca acessar está para além do escopo da pasta inicial, de tal forma a bloquear o acesso de pastas sensíveis, isso mesmo quando atalhos para pastas além do escopo estão colocados nalguma das pastas acessadas.
 
 ## Arquiteturas utilizadas
 
