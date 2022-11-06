@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.NoSuchElementException;
 
 import FileManager.FileSender;
 
@@ -87,23 +88,28 @@ public class Server extends SocketApplication{
 			return in.readInt();
 		}
 		
-		public void receiveRequest() throws IOException {
-			int request = in.readInt();
-			out.writeInt(9999);
-			switch (request) {
-			case 1:
-				sendListDirectory();
-				break;
-			case 2:
-				sendFile();
-				break;
-			case 3:
-				navigate();
-				break;
-			case 4:
-				this.close();
-				System.out.println("Other Peer ended connection");
-				break;
+		public void receiveRequest(){
+			try {
+				int request = in.readInt();
+				System.out.println(request);
+				out.writeInt(9999);
+				switch (request) {
+				case 1:
+					sendListDirectory();
+					break;
+				case 2:
+					sendFile();
+					break;
+				case 3:
+					navigate();
+					break;
+				case 4:
+					this.close();
+					System.out.println("Other Peer ended connection");
+					break;
+				}
+			}
+			catch(IOException e) {
 			}
 		}
 		

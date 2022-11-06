@@ -99,14 +99,4 @@ public class FileReceiver{
 		fileOut.close();
 		if(flag == 'N') receiveFile();
 	}
-	
-	//Closes the OutputStream created with the FileSender
-	public void close() {
-		try {
-			in.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }

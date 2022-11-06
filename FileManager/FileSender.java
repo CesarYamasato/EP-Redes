@@ -89,13 +89,4 @@ public class FileSender {
         out.writeChar('E');
         //System.out.println('E');
     }
-
-    // Closes the OutputStream created with the FileSender
-    public void close() {
-        try {
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

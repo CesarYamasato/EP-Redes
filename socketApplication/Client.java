@@ -52,7 +52,6 @@ public class Client extends SocketApplication{
 		private void receiveFiles() throws IOException{
 			FileReceiver fileReceiver = new FileReceiver(clientSocket);
 			fileReceiver.receiveFile();
-			fileReceiver.close();
 		}
 		
 		//Selects a file to be downloaded from the server Peer
