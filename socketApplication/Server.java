@@ -50,10 +50,17 @@ public class Server extends SocketApplication{
 			if(request < myDirectory.length && request >= 0) {
 				FileSender fileSender = new FileSender(clientSocket);
 				File file = new File(myPath + "/" + myDirectory[request].getList());
-				if(file.isDirectory()) fileSender.sendFolder(file);
+				System.out.println(myPath + "/" + myDirectory[request].getList());
+				if(file.isDirectory()) {
+					System.out.println("folder");
+					fileSender.sendFolder(file);
+				}
 				else fileSender.sendFile(file);
 			}
-			else out.writeChar('E');
+			else {
+				System.out.println("OIIII");
+				out.writeChar('E');
+			}
 		}
 
 		//Navigates to a folder on the server peer
@@ -88,8 +95,7 @@ public class Server extends SocketApplication{
 			return in.readInt();
 		}
 		
-		public void receiveRequest(){
-			try {
+		public void receiveRequest() throws IOException{
 				int request = in.readInt();
 				System.out.println(request);
 				out.writeInt(9999);
@@ -108,9 +114,6 @@ public class Server extends SocketApplication{
 					System.out.println("Other Peer ended connection");
 					break;
 				}
-			}
-			catch(IOException e) {
-			}
 		}
 		
 }
