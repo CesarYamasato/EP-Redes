@@ -17,7 +17,7 @@ Para baixar e compilar este programa, faça uso dos seguintes comandos:
 ```shell
 git clone https://github.com/CesarYamasato/Ep-Redes.git
 cd Ep-Redes
-javac **.java
+javac */*.java
 ```
 
 ## Modo de usar
