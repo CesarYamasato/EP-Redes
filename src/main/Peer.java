@@ -25,8 +25,8 @@ public class Peer extends Thread {
     }
 
     public void receiveRequest() throws IOException {
-    	 if(!this.isClosed()) server.receiveRequest();
-    	 else this.close();
+        if(!this.isClosed()) server.receiveRequest();
+        else this.close();
     }
 
     public int waitAwake() throws IOException {
@@ -34,15 +34,15 @@ public class Peer extends Thread {
     }
 
     public String getAddress() {
-    	return clientAddress;
+        return clientAddress;
     }
     public int getPort() {
-    	return port;
-    }
+        return port;
+    }       
     
     public void run() {
         try {
-            while (true) receiveRequest();
+            while (!this.isClosed()) receiveRequest();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -68,26 +68,26 @@ public class Peer extends Thread {
     }
 
     public boolean isClosed() {
-    	return server.isClosed() || client.isClosed() ? true : false;
+        return server.isClosed() || client.isClosed() ? true : false;
     }
     
     public void close() {
-    	if(!server.isClosed()) server.close();
-    	if(!client.isClosed()) client.close();
-    	System.exit(0);
+        if(!server.isClosed()) server.close();
+        if(!client.isClosed()) client.close();
+        System.exit(0);
     }
     
     private static void printHelp() {
-    	System.out.println( "Usage:" + System.lineSeparator() +
-    						"Available options:" + System.lineSeparator() +
-    						"-w [port] -> Creates a server socket on the specified port"+ System.lineSeparator() +
-    						"-c [port] [address] [port to connect] -> Connects to the specified socket on the specified address and creates a server socket on the specified port");
+        System.out.println( "Usage:" + System.lineSeparator() +
+                            "Available options:" + System.lineSeparator() +
+                            "-w [port] -> Creates a server socket on the specified port"+ System.lineSeparator() +
+                            "-c [port] [address] [port to connect] -> Connects to the specified socket on the specified address and creates a server socket on the specified port");
     }
     
     public static void main(String[] args) throws IOException {
         Peer peer = new Peer();
         if(args.length > 0) {
-        	if (args[0].equals("-w") && args.length == 2) {
+            if (args[0].equals("-w") && args.length == 2) {
                 peer.createServer(Integer.parseInt(args[1]));
                 peer.waitAwake();
                 peer.connect(peer.getAddress(),peer.getPort());
@@ -97,16 +97,16 @@ public class Peer extends Thread {
                 peer.createServer(Integer.parseInt(args[1]));
             }
             else {
-            	printHelp();
-            	return;
+                printHelp();
+                return;
             }
-        	peer.start();
-        	while (true && !peer.isClosed()) peer.sendRequest();
-        	peer.close();
+            peer.start();
+            while (true && !peer.isClosed()) peer.sendRequest();
+            peer.close();
         }
         else {
-        	printHelp();
-        	return;
+            printHelp();
+            return;
         }
     }
 }

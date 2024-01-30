@@ -1,0 +1,7 @@
+result=${PWD##*/}
+result=${result:-/}
+cd src
+javac -d "../bin/" -cp ".:../lib/*" */*.java
+cd ..
+jar cvfm bin/${result}Lib.jar resources/Manifest.txt -C bin . src
+
