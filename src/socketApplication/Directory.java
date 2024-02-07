@@ -35,7 +35,8 @@ public class Directory{
 		int i = 0;
 		for(Item item : items) {
 			if(item.isFolder())System.out.println(i + ":" +  item + "  Folder");
-			else System.out.println(i + ":" + item + "  Folder");
+			else System.out.println(i + ":" + item + "  File");
+			i++;
 		}
 	}
 

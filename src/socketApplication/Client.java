@@ -1,28 +1,53 @@
 package socketApplication;
 
-import Encryption.Asymmetric.RSA.RSAEncryptor;
+import Encryption.Asymmetric.RSA.RSAEncryption;
+import Encryption.EncryptionException.NoKeyException;
 import Encryption.Symmetric.RC6.RC6Decryptor;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import FileManager.FileReceiver;
 
 public class Client extends SocketApplication{
+	private FileReceiver fileReceiver;
 	private Directory otherPeersDirectory;
-	private RSAEncryptor rsaEncryptor;
+	private RSAEncryption rsaEncryptor;
 	private RC6Decryptor rc6Decryptor;
 
 	//Connects to another peer's serverSocket
-	public Client(Socket clientSocket) throws UnknownHostException, IOException{
+	public Client(Socket clientSocket) throws UnknownHostException, IOException, NoSuchAlgorithmException{
 		super(clientSocket);
 		otherPeersDirectory = new Directory();
-		rsaEncryptor = new RSAEncryptor();
+		rsaEncryptor = new RSAEncryption();
 		rc6Decryptor = new RC6Decryptor();
+		this.fileReceiver = new FileReceiver(clientSocket, rc6Decryptor);
 		receiveListDirectory();
 	}
+
+	//TODO: remove test messages add comments
+	public void sendRSAKey() throws IOException{
+		byte[] keyBytes = rsaEncryptor.getPublicKey().getEncoded();
+		out.writeInt(keyBytes.length);
+		out.write(keyBytes);
+	}
+
+	//TODO: remove test messages add comments
+	public void receiveRC6Key() throws IOException, NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoKeyException{
+		int keySize = in.readInt();
+		byte [] keyBytes = in.readNBytes(keySize);
+		byte [] decryptedKey = rsaEncryptor.decrypt(keyBytes);
+		rc6Decryptor.set_key(decryptedKey);
+	}
 	
+	//TODO: decrypt the names on arrival 
 	//Receives the List of items the other peer can send over
 	private void receiveListDirectory() throws IOException {
 		otherPeersDirectory = new Directory();
@@ -42,9 +67,9 @@ public class Client extends SocketApplication{
 		otherPeersDirectory.printDirectory();
 	}
 	
+	//TODO: decrypt the files on arrival
 	//Receives all files that are on the in
-	private void receiveFiles() throws IOException{
-		FileReceiver fileReceiver = new FileReceiver(clientSocket);
+	private void receiveFiles() throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoKeyException{
 		fileReceiver.receiveFile();
 	}
 	
@@ -72,7 +97,7 @@ public class Client extends SocketApplication{
 	}
 	
 	//Sends a request to the other peer
-	public void sendRequest() throws IOException {
+	public void sendRequest() throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoKeyException {
 		System.out.println(
 				"/////////////////////////////////////////"+ System.lineSeparator() +
 				"// 1: Update directory list            //"+ System.lineSeparator() +

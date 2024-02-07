@@ -4,12 +4,29 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import Encryption.Asymmetric.RSA.RSAEncryption;
+import Encryption.Symmetric.RC6.RC6Encryptor;
 import FileManager.FileSender;
 
 public class Server extends SocketApplication{
 	private Directory myDirectory;
 	private String myPath;
+	private RC6Encryptor rc6Encryptor;
+	private RSAEncryption rsaEncryptor;
+	private FileSender fileSender;
+	private PublicKey otherPeersPublicKey; 
+
 	
 	private Directory createDirectory(){
 		Directory directory = new Directory();
@@ -24,6 +41,7 @@ public class Server extends SocketApplication{
 		//adding every item conteined on the cwd to the directory object
 		for(String itemName : items){
 			boolean isFolder = new File(myPath + "/" + itemName).isDirectory();
+			System.out.println("2 Name: "+ itemName + "isfolder: " + isFolder);
 			directory.add_item(itemName, isFolder);
 		}
 
@@ -31,16 +49,33 @@ public class Server extends SocketApplication{
 	}
 
 	//this program will await for connection from another peer on its serverSocket (read Peer class for more detail)
-	public Server(Socket clientSocket) throws UnknownHostException, IOException{
+	public Server(Socket clientSocket) throws UnknownHostException, IOException, NoSuchAlgorithmException{
 		super(clientSocket);
 		myPath = System.getProperty("user.dir");
 		myDirectory = createDirectory();
 		sendListDirectory();
+		//The RC6 key will be encrypted using the other client Peer's public RSAKey, so it must be received beforehand
+		
+		//Creating the encrytion object creates the Keys with them
+		rsaEncryptor = new RSAEncryption();
+		rc6Encryptor = new RC6Encryptor();
+
+		fileSender = new FileSender(clientSocket, rc6Encryptor);
 	}
 
-	//TODO: implement
-	private void sendDecryptionKey(){
+	//TODO: remove test messages add comments
+	public void sendRC6Key() throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
+		byte[] encryptedKey = rsaEncryptor.encrypt(rc6Encryptor.getPublic_key().getEncoded(), otherPeersPublicKey);
+		out.writeInt(encryptedKey.length);
+		out.write(encryptedKey);
+	}
+	
 
+	//TODO: remove test messages add comments
+	public void receiveRSAKey() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException{
+		int keySize = this.in.readInt();
+		byte[] publicKeyBytes = in.readNBytes(keySize);
+		otherPeersPublicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(publicKeyBytes));
 	}
 
 	private void sendDirectoryItem(int index) throws IOException{
@@ -52,6 +87,8 @@ public class Server extends SocketApplication{
 		//name size
 		out.writeInt(itemToBeSent.toString().length());
 		//weather or not it is a folder
+		boolean isFolder = itemToBeSent.isFolder();
+		System.out.println("1 Name: " + itemToBeSent.toString() + " isFolder: " + isFolder);
 		out.writeBoolean(itemToBeSent.isFolder());
 		//name
 		out.writeBytes(itemToBeSent.toString());
@@ -60,17 +97,16 @@ public class Server extends SocketApplication{
 	//Sends the List of items in the folder on which the .class file is on
 	private void sendListDirectory() throws IOException {
 		myDirectory = createDirectory();
-		
+		out.writeInt(myDirectory.length());
 		for(int i=0; i < myDirectory.length(); i++) {sendDirectoryItem(i);}
 	}
 	
 	//Sends files to the client Peer
-	private void sendFile() throws IOException {
+	private void sendFile() throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		//reading which item the other peer wants
 		int request = in.readInt();
 		//checking if the requested item is withing a valid range
 		if(request < myDirectory.length() && request >= 0) {
-			FileSender fileSender = new FileSender(clientSocket);
 			File file = new File(myPath + "/" + myDirectory.getItem(request).toString());
 			if(file.isDirectory()) fileSender.sendFolder(file);
 			else fileSender.sendFile(file);
@@ -121,7 +157,7 @@ public class Server extends SocketApplication{
 		return in.readInt();
 	}
 	
-	public void receiveRequest() throws IOException{
+	public void receiveRequest() throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
 			int request = in.readInt();
 			//System.out.println(request);
 			out.writeInt(9999);
@@ -138,6 +174,7 @@ public class Server extends SocketApplication{
 			case 4:
 				this.close();
 				System.out.println("Other Peer ended connection");
+				System.exit(0);
 				break;
 			}
 	}
